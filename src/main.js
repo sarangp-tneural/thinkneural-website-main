@@ -13,6 +13,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 
 /* ---------- Pages: #about shows the About page, anything else the home story ---------- */
 let isAbout = false, page = 'home';
+let startLoop = null; // set once the 3D loop exists; route() and visibilitychange restart it
 const EVENT_IDS = ['events', 'instore-asia', 'ksum', 'huddle', 'secufest'];
 const CAREER_IDS = ['careers', 'internships', 'apply', 'openings'];
 const POLICY_IDS = ['privacy-policy', 'platform-licence-agreement', 'content-rules', 'cookies-policy', 'copyright-policy'];
@@ -32,7 +33,7 @@ function renderBlogGrid() {
 blogChipsEl.innerHTML = chipsHTML();
 blogChipsEl.addEventListener('click', e => {
   const c = e.target.closest('.chip');
-  if (c) { blogFilter = c.dataset.filter; renderBlogGrid(); }
+  if (c) { blogFilter = c.dataset.filter; renderBlogGrid(); c.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); }
 });
 document.getElementById('blogPreview').innerHTML = FEATURED_POSTS.map(cardHTML).join('\n');
 renderBlogGrid();
@@ -53,7 +54,54 @@ function renderBlog(h) {
 }
 const pathRoute = () => { const m = location.pathname.match(/^\/blog(?:\/([^/]+))?\/?$/); return m ? 'blog' + (m[1] ? '/' + m[1] : '') : ''; };
 
+/* ---------- Mobile menu, nav state, sticky CTA ---------- */
+const navEl = document.querySelector('nav');
+const menuBtn = document.getElementById('navToggle');
+const menuEl = document.getElementById('mmenu');
+const rootEl = document.documentElement;
+function setMenu(open, restoreFocus = true) {
+  if (open === menuEl.classList.contains('open')) return;
+  menuEl.classList.toggle('open', open);
+  menuEl.inert = !open;
+  rootEl.classList.toggle('menu-open', open);
+  menuBtn.setAttribute('aria-expanded', String(open));
+  menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  if (open) menuEl.querySelector('a').focus();
+  else if (restoreFocus) menuBtn.focus();
+  updateCta();
+}
+menuBtn.addEventListener('click', () => setMenu(!menuEl.classList.contains('open')));
+menuEl.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false, false); });
+addEventListener('keydown', e => {
+  if (!menuEl.classList.contains('open')) return;
+  if (e.key === 'Escape') { setMenu(false); return; }
+  if (e.key !== 'Tab') return;
+  const f = [menuBtn, ...menuEl.querySelectorAll('a[href]')];
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  else if (!f.includes(document.activeElement)) { e.preventDefault(); first.focus(); }
+});
+matchMedia('(min-width:901px)').addEventListener('change', e => { if (e.matches) setMenu(false, false); });
+const onScrollNav = () => navEl.classList.toggle('scrolled', scrollY > 8);
+addEventListener('scroll', onScrollNav, { passive: true }); onScrollNav();
+
+/* sticky mobile "Request a demo": home only, after the hero, hidden over #contact / footer / open menu */
+const ctaEl = document.getElementById('stickyCta');
+const ctaSeen = { hero: true, contact: false, foot: false };
+function updateCta() {
+  const on = page === 'home' && !ctaSeen.hero && !ctaSeen.contact && !ctaSeen.foot && !menuEl.classList.contains('open');
+  ctaEl.classList.toggle('show', on);
+  ctaEl.setAttribute('aria-hidden', String(!on));
+  ctaEl.tabIndex = on ? 0 : -1;
+}
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => { es.forEach(en => { ctaSeen[en.target.dataset.cta] = en.isIntersecting; }); updateCta(); });
+  [['.hero', 'hero'], ['#contact', 'contact'], ['.foot', 'foot']].forEach(([q, k]) => { const el = document.querySelector(q); if (el) { el.dataset.cta = k; io.observe(el); } });
+}
+
 function route() {
+  setMenu(false, false);
   const h = location.hash.slice(1) || pathRoute();
   const prev = page;
   page = h === 'about' ? 'about' : EVENT_IDS.includes(h) ? 'events' : CAREER_IDS.includes(h) ? 'careers' : POLICY_IDS.includes(h) ? 'policies' : (h === 'blog' || h.startsWith('blog/')) ? 'blog' : 'home';
@@ -65,6 +113,8 @@ function route() {
   document.documentElement.classList.toggle('is-policies', page === 'policies');
   document.documentElement.classList.toggle('is-blog', page === 'blog');
   renderBlog(h);
+  updateCta();
+  if (startLoop) startLoop();
   document.querySelectorAll('#policiesView .policy').forEach(el => { el.hidden = page === 'policies' && el.id !== h; });
   if (isAbout) {
     const t = ((h !== 'events' && EVENT_IDS.includes(h)) || (h !== 'careers' && CAREER_IDS.includes(h)) || POLICY_IDS.includes(h)) ? document.getElementById(h) : null;
@@ -83,13 +133,35 @@ addEventListener('hashchange', route);
 
 /* ---------- Photo viewer ---------- */
 const lb = document.getElementById('lightbox');
+const lbImg = lb.querySelector('img'), lbCap = lb.querySelector('p');
+let lbItems = [], lbIdx = 0, lbOpener = null;
+function showLb(i) {
+  lbIdx = (i + lbItems.length) % lbItems.length;
+  const b = lbItems[lbIdx], im = b.querySelector('img');
+  lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt; lbCap.textContent = b.dataset.cap || '';
+}
 document.querySelectorAll('.ph').forEach(b => b.addEventListener('click', () => {
-  const im = b.querySelector('img'); lb.querySelector('img').src = im.src; lb.querySelector('img').alt = im.alt;
-  lb.querySelector('p').textContent = b.dataset.cap; lb.classList.add('on'); lb.querySelector('.lb-close').focus();
+  lbOpener = b;
+  lbItems = [...(b.closest('.gallery') || b.closest('section') || document).querySelectorAll('.ph')];
+  showLb(lbItems.indexOf(b)); lb.classList.add('on'); lb.querySelector('.lb-close').focus();
 }));
-const closeLb = () => lb.classList.remove('on');
+const closeLb = () => { if (!lb.classList.contains('on')) return; lb.classList.remove('on'); if (lbOpener) lbOpener.focus(); };
 lb.addEventListener('click', e => { if (e.target === lb || e.target.classList.contains('lb-close')) closeLb(); });
-addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+let tx = 0, ty = 0;
+lb.addEventListener('touchstart', e => { if (e.touches.length === 1) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; } else tx = ty = 0; }, { passive: true });
+lb.addEventListener('touchend', e => {
+  if (!tx && !ty) return;
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5 && lbItems.length > 1) showLb(lbIdx + (dx < 0 ? 1 : -1));
+  else if (dy > 80 && Math.abs(dy) > Math.abs(dx) * 1.5) closeLb();
+  tx = ty = 0;
+}, { passive: true });
+addEventListener('keydown', e => {
+  if (!lb.classList.contains('on')) return;
+  if (e.key === 'Escape') closeLb();
+  else if (e.key === 'ArrowRight' && lbItems.length > 1) showLb(lbIdx + 1);
+  else if (e.key === 'ArrowLeft' && lbItems.length > 1) showLb(lbIdx - 1);
+});
 
 /* ---------- Demo form ---------- */
 const form = document.getElementById('demoForm');
@@ -182,10 +254,20 @@ document.querySelectorAll('details').forEach(d => d.addEventListener('toggle', m
 const railLinks = [...document.querySelectorAll('.rail a')];
 let lastRail = -1;
 const railEl = document.querySelector('.rail'), faqEl = document.getElementById('faq');
+const pillEl = document.getElementById('stagePill');
+const STAGE_NAMES = ['Upload', 'Furniture', 'GFC', 'MEP', 'BOQ', 'Sakshi', 'DataDime', 'Platform'];
+let lastPill = -1;
+function updatePill(r, off) {
+  const k = off ? 0 : r;
+  if (k === lastPill) return; lastPill = k;
+  pillEl.classList.toggle('show', k >= 1);
+  if (k >= 1) pillEl.textContent = `${String(k).padStart(2, '0')} / 08 · ${STAGE_NAMES[k - 1]}`;
+}
 function updateRail(s) {
   if (isAbout) return;
   railEl.classList.toggle('off', scrollY + innerHeight * 0.5 > faqEl.offsetTop);
   const r = Math.round(s);
+  updatePill(r, scrollY + innerHeight * 0.5 > faqEl.offsetTop);
   if (r === lastRail) return; lastRail = r;
   railLinks.forEach(a => a.classList.toggle('on', +a.dataset.r === r));
 }
@@ -274,7 +356,9 @@ function renderStats() {
 /* ---------- 3D ---------- */
 const canvas = document.getElementById('stage');
 let renderer = null;
-if (THREE) { try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); } catch (e) { renderer = null; } }
+const isMobileView = () => matchMedia('(max-width:900px), (pointer:coarse)').matches;
+const lowEnd = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+if (THREE) { try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !(lowEnd && isMobileView()) }); } catch (e) { renderer = null; } }
 if (!renderer) {
   document.documentElement.classList.add('no-webgl');
   for (let i = 0; i < 900; i++) simStep(0.1);
@@ -286,7 +370,7 @@ if (!renderer) {
 }
 
 const BG = 0x02021A;
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(devicePixelRatio, isMobileView() ? 1.5 : 2));
 renderer.setClearColor(BG, 1);
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(BG, 48, 100);
@@ -509,11 +593,16 @@ const K = [
 ];
 const camP = V(), camT = V(), tmpA = V(), tmpB = V();
 let distMul = 1;
+let lastW = 0, lastH = 0;
 function resize() {
-  const w = innerWidth, h = innerHeight;
+  // the canvas is 100lvh tall, so its height does not change when the mobile address bar shows/hides
+  const w = innerWidth, h = canvas.clientHeight || innerHeight;
+  if (w === lastW && Math.abs(h - lastH) <= 120) return;
+  lastW = w; lastH = h;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, isMobileView() ? 1.5 : 2));
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
-  const mobile = w <= 900;
+  const mobile = w <= 900 && w < h; // portrait phones/tablets; landscape keeps the desktop framing (store on the right)
   camera.fov = camera.aspect < 1 ? Math.min(72, 40 / (camera.aspect * 1.05)) : 40;
   distMul = mobile ? 1.1 : 1;
   if (mobile) camera.setViewOffset(w, h, 0, h * 0.2, w, h);
@@ -521,7 +610,9 @@ function resize() {
   camera.updateProjectionMatrix();
   measure();
 }
-resize(); addEventListener('resize', resize);
+resize(); addEventListener('resize', resize); addEventListener('orientationchange', () => setTimeout(() => { lastW = 0; resize(); }, 250));
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+addEventListener('load', () => { lastW = 0; resize(); });
 
 let mx = 0, my = 0, pmx = 0, pmy = 0;
 if (!reduce) addEventListener('pointermove', e => { mx = e.clientX / innerWidth * 2 - 1; my = e.clientY / innerHeight * 2 - 1; }, { passive: true });
@@ -609,7 +700,18 @@ function tick() {
   camera.position.copy(camP); camera.lookAt(camT);
 
   renderer.render(scene, camera);
-  requestAnimationFrame(tick);
 }
-requestAnimationFrame(tick);
+// render only while the home view is visible and the tab is active; ~30fps on phones
+let rafId = 0, lastFrame = 0;
+const shouldRun = () => !document.hidden && page === 'home';
+function loop(ts) {
+  rafId = 0;
+  if (!shouldRun()) return;
+  rafId = requestAnimationFrame(loop);
+  if (isMobileView() && ts - lastFrame < 30) return;
+  lastFrame = ts; tick();
+}
+startLoop = () => { if (!rafId && shouldRun()) { clock.getDelta(); rafId = requestAnimationFrame(loop); } };
+document.addEventListener('visibilitychange', startLoop);
+startLoop();
 })();

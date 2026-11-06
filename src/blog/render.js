@@ -33,8 +33,7 @@ export function relatedPosts(post) {
 }
 
 export function articleHTML(p) {
-  return `<a class="back" href="#blog">← All articles</a>
-<span class="btag">${esc(p.category)}</span>
+  return `<div class="backbar"><a class="back" href="#blog">← All articles</a><span class="btag">${esc(p.category)}</span></div>
 <h1>${esc(p.title)}</h1>
 <p class="bmeta"><span>${esc(p.readTime)}</span></p>
 <div class="post-body">${p.body}</div>
