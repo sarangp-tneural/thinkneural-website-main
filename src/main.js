@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import './style.css';
+import { POSTS, FEATURED_POSTS } from './blog/posts.js';
+import { cardHTML, gridHTML, chipsHTML, articleHTML, relatedHTML } from './blog/render.js';
 
 (() => {
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -14,20 +16,60 @@ let isAbout = false, page = 'home';
 const EVENT_IDS = ['events', 'instore-asia', 'ksum', 'huddle', 'secufest'];
 const CAREER_IDS = ['careers', 'internships', 'apply', 'openings'];
 const POLICY_IDS = ['privacy-policy', 'platform-licence-agreement', 'content-rules', 'cookies-policy', 'copyright-policy'];
+/* ---------- Blog: #blog (listing) and #blog/<slug> (article); /blog/<slug>/ pre-rendered pages boot into the same views ---------- */
+const baseTitle = document.documentElement.dataset.baseTitle || document.title;
+const metaDesc = document.querySelector('meta[name="description"]');
+const baseDesc = document.documentElement.dataset.baseDesc || (metaDesc ? metaDesc.content : '');
+let blogFilter = 'All';
+const blogGridEl = document.getElementById('blogGrid');
+const blogChipsEl = document.getElementById('blogFilters');
+function renderBlogGrid() {
+  const list = blogFilter === 'All' ? POSTS : POSTS.filter(p => p.category === blogFilter);
+  blogGridEl.innerHTML = gridHTML(list);
+  document.getElementById('blogCount').textContent = `Showing ${list.length} ${list.length === 1 ? 'article' : 'articles'}${blogFilter === 'All' ? '' : ' in ' + blogFilter}`;
+  blogChipsEl.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.filter === blogFilter)));
+}
+blogChipsEl.innerHTML = chipsHTML();
+blogChipsEl.addEventListener('click', e => {
+  const c = e.target.closest('.chip');
+  if (c) { blogFilter = c.dataset.filter; renderBlogGrid(); }
+});
+document.getElementById('blogPreview').innerHTML = FEATURED_POSTS.map(cardHTML).join('\n');
+renderBlogGrid();
+function renderBlog(h) {
+  const slug = h.startsWith('blog/') ? h.slice(5) : '';
+  const post = POSTS.find(p => p.slug === slug);
+  document.getElementById('blogIndex').hidden = !!post;
+  document.getElementById('blogReader').hidden = !post;
+  if (post) {
+    document.getElementById('blogArticle').innerHTML = articleHTML(post);
+    document.getElementById('blogRelated').innerHTML = relatedHTML(post);
+    document.title = post.title + ' | ThinkNeural.ai';
+    if (metaDesc) metaDesc.content = post.description;
+  } else {
+    document.title = h === 'blog' || h.startsWith('blog/') ? 'Blog | ThinkNeural.ai' : baseTitle;
+    if (metaDesc) metaDesc.content = baseDesc;
+  }
+}
+const pathRoute = () => { const m = location.pathname.match(/^\/blog(?:\/([^/]+))?\/?$/); return m ? 'blog' + (m[1] ? '/' + m[1] : '') : ''; };
+
 function route() {
-  const h = location.hash.slice(1);
+  const h = location.hash.slice(1) || pathRoute();
   const prev = page;
-  page = h === 'about' ? 'about' : EVENT_IDS.includes(h) ? 'events' : CAREER_IDS.includes(h) ? 'careers' : POLICY_IDS.includes(h) ? 'policies' : 'home';
+  page = h === 'about' ? 'about' : EVENT_IDS.includes(h) ? 'events' : CAREER_IDS.includes(h) ? 'careers' : POLICY_IDS.includes(h) ? 'policies' : (h === 'blog' || h.startsWith('blog/')) ? 'blog' : 'home';
   isAbout = page !== 'home';
   const wasAbout = prev !== 'home';
   document.documentElement.classList.toggle('is-about', page === 'about');
   document.documentElement.classList.toggle('is-events', page === 'events');
   document.documentElement.classList.toggle('is-careers', page === 'careers');
   document.documentElement.classList.toggle('is-policies', page === 'policies');
+  document.documentElement.classList.toggle('is-blog', page === 'blog');
+  renderBlog(h);
   document.querySelectorAll('#policiesView .policy').forEach(el => { el.hidden = page === 'policies' && el.id !== h; });
   if (isAbout) {
     const t = ((h !== 'events' && EVENT_IDS.includes(h)) || (h !== 'careers' && CAREER_IDS.includes(h)) || POLICY_IDS.includes(h)) ? document.getElementById(h) : null;
     if (t) requestAnimationFrame(() => t.scrollIntoView({ block: 'start' }));
+    else if (page === 'blog') scrollTo({ top: 0, behavior: 'instant' });
     else if (prev !== page) scrollTo(0, 0);
   }
   else {

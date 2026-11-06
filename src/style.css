@@ -339,3 +339,65 @@ select option{background:var(--navy)}
 .policy a{color:var(--aqua)}
 #policiesView section[hidden]{display:none}
 #policiesView section{min-height:60vh}
+
+/* blog */
+#blogView{display:none}
+.is-blog #blogView{display:block}
+.is-blog #homeView,.is-blog .rail{display:none}
+.is-blog .shade{background:rgba(2,2,26,.78)}
+#blogView [hidden]{display:none}
+#blogView section{min-height:auto;display:block;padding:36px clamp(16px,5vw,72px)}
+#blogView section.a-hero{padding-top:150px;padding-bottom:48px}
+.blog-hero h1{max-width:18ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.chip{font-family:var(--display);font-size:14px;font-weight:600;color:var(--body);background:transparent;border:1px solid #283466;border-radius:999px;padding:8px 16px;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+.chip span{font-family:var(--mono);font-size:12px;color:var(--muted);margin-left:4px}
+.chip:hover{border-color:var(--aqua);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.chip[aria-pressed="true"] span{color:#fff}
+.bcount{margin-top:18px;font-size:14px;color:var(--muted)}
+.bgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.bcard{--tint:18,167,238;position:relative;display:flex;flex-direction:column;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:border-color .2s,transform .2s}
+.bcard:hover,.bcard:focus-within{border-color:rgb(var(--tint));transform:translateY(-2px)}
+.bcard[data-cat="Sakshi"]{--tint:124,108,255}
+.bcard[data-cat="DataDime"]{--tint:47,214,163}
+.bcard[data-cat="Retail"]{--tint:255,180,84}
+.bcard[data-cat="Banking"]{--tint:255,122,144}
+.bcard[data-cat="Platform"]{--tint:155,231,245}
+.bstrip{height:64px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(var(--tint),.22),rgba(var(--tint),.04)),repeating-linear-gradient(135deg,rgba(var(--tint),.10) 0 12px,rgba(var(--tint),.03) 12px 24px)}
+.bbody{display:flex;flex-direction:column;gap:8px;padding:18px 20px 20px;flex:1}
+.btag{font-family:var(--mono);font-size:11.5px;color:var(--ice);letter-spacing:.05em;text-transform:uppercase}
+.bcard h3{font-size:18px;line-height:1.3;letter-spacing:-.01em}
+.blink{text-decoration:none;color:var(--ink)}
+.blink::after{content:'';position:absolute;inset:0}
+.blink:focus-visible{outline:none}
+.bcard:has(.blink:focus-visible){outline:2px solid var(--ice);outline-offset:3px}
+.bcard p{font-size:14.5px;line-height:1.55;color:var(--body);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bmeta{display:flex;justify-content:space-between;gap:12px;margin-top:auto;padding-top:6px;font-size:13px;color:var(--muted)}
+.bmore{color:var(--aqua);font-weight:600}
+.blog-panel{max-width:1040px;margin:0 auto}
+.blog-panel .bgrid{margin:22px 0}
+.blog-panel p{max-width:60ch}
+.blog-reader .wrap{max-width:1120px}
+.post{max-width:720px;margin:0 auto;padding-top:110px}
+.post .back{display:block;width:max-content;margin-bottom:22px;color:var(--aqua);text-decoration:none;font-weight:600;font-size:15px}
+.post .back:hover{color:var(--ice)}
+.post h1{font-size:clamp(32px,4.4vw,48px);line-height:1.12;letter-spacing:-.02em;margin:10px 0 12px}
+.post .bmeta{justify-content:flex-start;margin:0 0 28px;padding:0}
+.post-body p,.post-body li{font-size:17.5px;line-height:1.75;color:var(--body);max-width:none}
+.post-body p{margin:0 0 18px}
+.post-body h2{font-size:clamp(22px,2.6vw,28px);line-height:1.25;letter-spacing:-.01em;margin:38px 0 12px}
+.post-body h3{font-size:19px;margin:26px 0 8px}
+.post-body ul,.post-body ol{margin:0 0 20px 22px}
+.post-body li{margin:6px 0}
+.post-body a{color:var(--aqua)}
+.post-body strong{color:var(--ink)}
+.post-body .closer{margin:30px 0}
+.bcta{display:flex;align-items:center;justify-content:space-between;gap:18px 24px;flex-wrap:wrap;margin-top:40px;padding:24px 26px;border-radius:18px;background:var(--panel);border:1px solid var(--line)}
+.bcta strong{display:block;font-size:20px;margin-bottom:4px}
+.bcta span{font-size:14.5px;color:var(--body)}
+.related{margin-top:64px;padding-bottom:40px}
+.related h2{font-size:26px}
+@media (max-width:1024px){.bgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.bgrid{grid-template-columns:minmax(0,1fr)}.post{padding-top:90px}.post-body p,.post-body li{font-size:16.5px}}
+.post .btag{display:block}
