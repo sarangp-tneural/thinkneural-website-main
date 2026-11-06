@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thinkneural 3D Website</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<canvas id="stage" aria-hidden="true"></canvas>
+<div class="shade"></div>
+
+<nav>
+  <a class="brand" href="#home"><img src="/img/img-a0ad15324b.webp" alt=""><b>ThinkNeural<span>.ai</span></b></a>
+  <div class="navlinks">
+    <a href="#spacezap">SpaceZap</a>
+    <a href="#sakshi">Sakshi</a>
+    <a href="#datadime">DataDime</a>
+    <a href="#about">About Us</a>
+    <a href="#events">Events</a>
+    <a href="#careers">Careers</a>
+    <a href="#faq">FAQ</a>
+    <a class="btn btn-primary" href="#contact">Request a demo</a>
+  </div>
+</nav>
+
+<ul class="rail" aria-label="Sections">
+  <li><a href="#spacezap" data-r="1">Upload<i></i></a></li>
+  <li><a href="#furniture" data-r="2">Furniture<i></i></a></li>
+  <li><a href="#gfc" data-r="3">GFC<i></i></a></li>
+  <li><a href="#mep" data-r="4">MEP<i></i></a></li>
+  <li><a href="#boq" data-r="5">BOQ<i></i></a></li>
+  <li><a href="#sakshi" data-r="6">Sakshi<i></i></a></li>
+  <li><a href="#datadime" data-r="7">DataDime<i></i></a></li>
+  <li><a href="#platform" data-r="8">Platform<i></i></a></li>
+</ul>
+
+<main id="homeView">
+  <section class="hero" data-stage="0">
+    <div class="panel">
+      <div class="kicker">ThinkNeural.ai <b>·</b> AI Platform for Retail</div>
+      <h1>From empty shell to <em>running floor.</em></h1>
+      <p class="lead">One platform for every retail space you build and run.</p>
+      <p>Retail lives in physical space. ThinkNeural is the AI layer for that space. SpaceZap designs it. Sakshi reads it. DataDime answers questions about it. It works for store one. It works for store five hundred.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#contact">Request a demo</a>
+        <a class="btn btn-ghost" href="#spacezap">Scroll to see it built</a>
+      </div>
+      <div class="facts"><span>1,000+ stores rolled out</span><span>10,000+ cameras turned into data</span></div>
+    </div>
+  </section>
+
+  <section class="step" id="spacezap" data-stage="1">
+    <div class="panel">
+      <div class="product"><strong>SpaceZap.ai</strong> · Store Design Automation</div>
+      <div class="kicker">01 <b>Upload or scan</b></div>
+      <h2>Store layouts and MEP dockets in minutes, not months.</h2>
+      <p>Ask any architect how long a retail fit-out takes. The honest answer is months. SpaceZap changes that answer to minutes.</p>
+      <p>Upload a DXF or DWG site outline. Or scan the raw space with a phone and LiDAR turns it into an accurate floor plan and 3D model.</p>
+      <div class="chip"><span class="ext">DWG</span><div><strong>store_outline.dwg</strong><small id="fileMeta">368 sqm · 24.0 × 16.0 m</small></div></div>
+    </div>
+  </section>
+
+  <section class="step" id="furniture" data-stage="2">
+    <div class="panel">
+      <div class="kicker">02 <b>Furniture design</b></div>
+      <h2>Your brand, applied automatically.</h2>
+      <p>The ML model learns your store design and repeats it precisely on every new space. Gondolas, wall bays, trial rooms and the cash counter land where your rules say. Aisle widths follow your standards.</p>
+    </div>
+  </section>
+
+  <section class="step" id="gfc" data-stage="3">
+    <div class="panel">
+      <div class="kicker">03 <b>GFC dockets</b></div>
+      <h2>Good for construction. Ready for site.</h2>
+      <p>Every wall, opening and aisle is dimensioned in millimetres on a proper setting-out grid. Your contractor builds from the docket on day one. Files export to AutoCAD.</p>
+    </div>
+  </section>
+
+  <section class="step" id="mep" data-stage="4">
+    <div class="panel">
+      <div class="kicker">04 <b>MEP dockets</b></div>
+      <h2>Ten drawings. One click.</h2>
+      <p>Once your layout is approved, SpaceZap produces the full trade set from it. The coordination that used to take weeks happens in minutes.</p>
+      <ul class="drawings">
+        <li><i style="background:#FFC53D"></i>Power</li>
+        <li><i style="background:#FFF2C2"></i>Lighting</li>
+        <li><i style="background:#8FA6BF"></i>HVAC</li>
+        <li><i style="background:#2FD3FF"></i>Plumbing</li>
+        <li><i></i>Cable tray</li>
+        <li><i></i>CCTV</li>
+        <li><i></i>Signage</li>
+        <li><i></i>Partition</li>
+        <li><i></i>Flooring</li>
+        <li><i></i>Finishes</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step wide" id="boq" data-stage="5">
+    <div class="panel">
+      <div class="kicker">05 <b>BOQ</b></div>
+      <h2>A contractor-ready BOQ.</h2>
+      <p>Every item in the design is counted and measured. Procurement can start the day the design is approved.</p>
+      <table aria-label="Bill of quantities">
+        <thead><tr><th>Item</th><th>Unit</th><th>Qty</th></tr></thead>
+        <tbody id="boqBody"></tbody>
+      </table>
+      <div class="note">Quantities taken from the store on screen.</div>
+    </div>
+  </section>
+
+  <section class="step wide" id="sakshi" data-stage="6">
+    <div class="panel">
+      <div class="product"><strong>Sakshi.ai</strong> · Data for Physical Spaces</div>
+      <h2>Turn every camera into data for your physical space.</h2>
+      <p>Your stores already have cameras. Right now they only watch for theft. Sakshi puts them to work. Who walks in. Where they go. How long they stay. Which zones they never reach.</p>
+      <div class="tiles">
+        <div class="tile"><small>In store now</small><b id="stIn">0</b></div>
+        <div class="tile"><small>Footfall</small><b id="stFoot">0</b></div>
+        <div class="tile"><small>Avg dwell time</small><b id="stDwell">0m</b></div>
+        <div class="tile"><small>Bounce ratio</small><b id="stBounce">0%</b></div>
+      </div>
+      <div class="feats">
+        <div><h3>Footfall and dwell time</h3><p>Count every visitor. See exactly where they slow down and where they walk past.</p></div>
+        <div><h3>SOP compliance</h3><p>Catch a missed checklist or a uniform lapse the moment it happens, not at the next audit.</p></div>
+        <div><h3>Staffing and customer insight</h3><p>Match your team to real customer patterns before thin coverage costs you a sale.</p></div>
+      </div>
+      <div class="live">Simulated feed for illustration</div>
+    </div>
+  </section>
+
+  <section class="step" id="datadime" data-stage="7">
+    <div class="panel">
+      <div class="product"><strong>DataDime.ai</strong> · Conversational Analytics</div>
+      <h2>Ask your stores a question. Get a plain answer.</h2>
+      <p>SpaceZap gives you the layout. Sakshi gives you the signal. DataDime lets you talk to both.</p>
+      <div class="chat" aria-live="polite">
+        <div class="bubble q">Which zone are shoppers walking past?</div>
+        <div class="bubble a"><small>DataDime</small><span id="ddAnswer">Reading the floor…</span></div>
+      </div>
+      <div class="asks"><span>What does a price change do to a zone?</span><span>Where do I add staff next month?</span><span>Which layout sells better?</span></div>
+      <div class="live">Answer drawn from the simulated feed above</div>
+    </div>
+  </section>
+
+  <section class="step wide" id="platform" data-stage="8">
+    <div class="panel">
+      <div class="product"><strong>ThinkNeural.ai</strong> · AI Platform for Retail</div>
+      <h2>One platform, from <em>empty shell to running floor.</em></h2>
+      <p>Most retail tools solve one slice of the problem. ThinkNeural covers the whole life of a space. Each product stands on its own. Together they form the AI platform for retail.</p>
+      <div class="mods">
+        <div class="mod"><div class="tag">SpaceZap</div><p>Builds it. Layouts, GFC, MEP dockets and BOQ from a DXF, DWG or phone scan.</p></div>
+        <div class="mod"><div class="tag">Sakshi</div><p>Reads it the moment it opens, on the cameras already in place.</p></div>
+        <div class="mod"><div class="tag">DataDime</div><p>Answers the questions that follow, in plain language.</p></div>
+      </div>
+      <div class="impact">
+        <div><b>1,000+</b><small>Stores rolled out</small></div>
+        <div><b>10,000+</b><small>Cameras turned into data</small></div>
+        <div><b>1,000+</b><small>Hours saved with SpaceZap</small></div>
+      </div>
+      <div class="trust">Trusted by teams rolling out and running retail at scale</div>
+      <ul class="logos"><li><img src="/img/img-0a3ccd9be9.svg" alt="Maruti Suzuki"></li><li><img src="/img/img-42064b7165.svg" alt="Vijay Sales"></li><li><img src="/img/img-a340cbe44a.png" alt="myG"></li><li><img src="/img/img-fc53dabeb1.png" alt="Niyaaz"></li><li><img src="/img/img-64eabcc60d.svg" alt="Lenskart"></li><li><img src="/img/img-203f27f5a1.png" alt="Haeal"></li><li><img src="/img/img-f1c1d2a2be.png" alt="Nellikka"></li><li><img src="/img/img-8513bc00b0.jpg" alt="Wonderla Parks and Resorts"></li></ul>
+    </div>
+  </section>
+
+  <section class="solid" id="faq">
+    <div class="panel">
+      <div class="kicker">FAQ</div>
+      <h2>Frequently asked questions</h2>
+      <details open><summary>Does SpaceZap really generate MEP dockets?</summary><p>Yes. Once your layout is approved, SpaceZap produces the full trade set from it. Power, lighting, HVAC, plumbing, cable tray, CCTV, signage, partition, flooring, and finishes. Ten drawings compile in one click, along with a contractor-ready BOQ. The coordination that used to take weeks happens in minutes.</p></details>
+      <details><summary>Do I need to install new cameras for Sakshi?</summary><p>No. Sakshi runs on the CCTV you already have. It reads your existing feeds and turns them into floor data, so there is no new hardware and no rip-and-replace.</p></details>
+      <details><summary>How does ThinkNeural handle data security?</summary><p>All footage and site data is encrypted in transit and at rest. Every deployment has role-based access control and full audit logs, and our data handling follows India's Digital Personal Data Protection (DPDP) Act.</p></details>
+      <details><summary>Can this scale across hundreds of stores?</summary><p>Yes. SpaceZap applies the same brand design to store one and store five hundred with the same effort. Sakshi runs across every site on the cameras already in place.</p></details>
+      <details><summary>What deployment options are available?</summary><p>Cloud, on-premise, and hybrid. Tell us your camera network and your rollout plan and we will map the right fit.</p></details>
+      <details><summary>Is pricing flexible across industries?</summary><p>Yes. Retail, hospitality, and leisure teams run on the same platform with pricing matched to store count and scope.</p></details>
+    </div>
+  </section>
+
+  <section class="solid" id="contact">
+    <div class="panel">
+      <div class="kicker">Request a demo</div>
+      <h2>See it on your own floor plan.</h2>
+      <p>Tell us about your rollout or your camera network. We will run a live thirty-minute demo on a real space from your own network. No commitment. You will see what SpaceZap designs and what Sakshi surfaces before you decide anything.</p>
+      <form id="demoForm" novalidate>
+        <div class="field"><label for="fName">Full name</label><input id="fName" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="fEmail">Work email</label><input id="fEmail" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="fCompany">Company</label><input id="fCompany" name="company" autocomplete="organization" required></div>
+        <div class="field"><label for="fPhone">Phone number</label><input id="fPhone" name="phone" type="tel" autocomplete="tel"></div>
+        <div class="field full"><label for="fSize">Company size</label>
+          <select id="fSize" name="size"><option value="">Select</option><option>1-50</option><option>51-200</option><option>201-1000</option><option>1000+</option></select></div>
+        <div class="field full"><label for="fNeed">What are you looking to solve?</label><textarea id="fNeed" name="need"></textarea></div>
+        <div class="formerr" id="formErr" role="alert"></div>
+        <div class="field full"><button class="btn btn-primary" type="submit" id="fSubmit">Request a demo</button></div>
+        <div class="formmsg" id="formMsg">Your request is ready to send to sales@tneuralai.com.
+          <div class="ctas"><a class="btn btn-primary" id="mailLink" href="mailto:sales@tneuralai.com">Open in email</a><button class="btn btn-ghost" type="button" id="copyBtn">Copy details</button></div>
+        </div>
+      </form>
+      <span class="mail">Or write to sales@tneuralai.com · General enquiries: info@tneuralai.com</span>
+    </div>
+  </section>
+</main>
+
+
+<main id="aboutView">
+  <section class="a-hero">
+    <div class="wrap">
+      <div class="kicker">About ThinkNeural.ai</div>
+      <h1>Creating AI with <em>a purpose.</em></h1>
+      <p>ThinkNeural.ai builds ethical, AI-driven tools that help retail and commerce professionals make smarter decisions, automate tasks, and drive innovation.</p>
+      <div class="ctas"><a class="btn btn-primary" href="#contact">Request a demo</a><a class="btn btn-ghost" href="#spacezap">See the platform</a></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap a-split">
+      <div>
+        <div class="kicker">About us</div>
+        <h2>A multi-agent platform for the modern enterprise.</h2>
+        <p class="lead">Retail first. Built to scale into every industry.</p>
+      </div>
+      <div class="card">
+        <p>ThinkNeural AI is a multi-agent platform transforming retail with automation, analytics, and edge intelligence. Built for scale, it extends into broader agentic solutions across industries. It helps enterprises solve complex challenges with speed and impact.</p>
+        <p>Our architecture lets intelligent agents work together. Each one specialises in automation, analytics, edge computing, or decision intelligence. Together they deliver real-world impact across industries.</p>
+        <p>We are transforming the retail sector today, powering operational AI, predictive workflows, and real-time insights. The platform is designed for more. It is built to scale into agentic ecosystems that serve finance, healthcare, logistics, and beyond. ThinkNeural AI is not just a product. It is a problem-solving engine for the modern enterprise.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap card">
+      <div class="kicker">The impact so far</div>
+      <div class="a-impact" style="margin-top:18px">
+        <div><b>1,000+</b><small>Stores rolled out</small></div>
+        <div><b>10,000+</b><small>Cameras turned into data</small></div>
+        <div><b>1,000+</b><small>Hours saved with SpaceZap</small></div>
+      </div>
+      <div class="trust">Trusted by teams rolling out and running retail at scale</div>
+      <ul class="logos a-logos"><li><img src="/img/img-0a3ccd9be9.svg" alt="Maruti Suzuki"></li><li><img src="/img/img-42064b7165.svg" alt="Vijay Sales"></li><li><img src="/img/img-a340cbe44a.png" alt="myG"></li><li><img src="/img/img-fc53dabeb1.png" alt="Niyaaz"></li><li><img src="/img/img-64eabcc60d.svg" alt="Lenskart"></li><li><img src="/img/img-203f27f5a1.png" alt="Haeal"></li><li><img src="/img/img-f1c1d2a2be.png" alt="Nellikka"></li><li><img src="/img/img-8513bc00b0.jpg" alt="Wonderla Parks and Resorts"></li></ul>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="wrap">
+      <div class="kicker">The founding team</div>
+      <h2>A rare blend of enterprise depth, technical mastery, and product vision.</h2>
+      <div class="team">
+        <article class="person"><div class="avatar" aria-hidden="true">VK</div><div><h3>Vaitheesh Kolady</h3><div class="role">Executive Chair &amp; Mentor</div></div><p>25+ years leading engineering at Oracle, SunGard, and Limelight. Scaled global teams and built enterprise platforms at scale. Second-time entrepreneur.</p></article>
+        <article class="person"><div class="avatar" aria-hidden="true">RN</div><div><h3>Raghav Nair</h3><div class="role">CEO</div></div><p>14+ years as a Solution Architect at Cisco, Ericsson, and IDEA. A second-time founder with deep expertise in operational AI and agentic workflows.</p></article>
+        <article class="person"><div class="avatar" aria-hidden="true">MM</div><div><h3>Manoj M</h3><div class="role">CTO</div></div><p>14+ years building scalable cloud, ML, and SaaS systems. Master of AWS, CI/CD, infra automation, and full-stack engineering.</p></article>
+        <article class="person"><div class="avatar" aria-hidden="true">SR</div><div><h3>Surya Ruddaraju</h3><div class="role">Head of Products &amp; AI Solutions</div></div><p>USC-trained AI engineer. Ex-AWS, Symantec, Cadence, Alan AI. Expert in LLMs, spatial computing, and predictive modeling.</p></article>
+        <article class="person"><div class="avatar" aria-hidden="true">RC</div><div><h3>Rakesh Chandran J</h3><div class="role">CRO</div></div><p>IIM Kozhikode + XLRI. Scaled teams of 250+ across operations and GTM. Deep understanding of enterprise behavior, adoption, and execution.</p></article>
+      </div>
+      <div class="closer"><strong>This is not a founding team you can easily assemble again.</strong>They bring the exact blend required to build the hardest version of enterprise AI. Scale, precision, and vision in one team.</div>
+    </div>
+  </section>
+
+
+  <section id="culture">
+    <div class="wrap">
+      <div class="kicker">Culture</div>
+      <h2>Serious about the work. Not about ourselves.</h2>
+      <p>We are a small team building hard technology. That only works when people trust each other, speak up and enjoy showing up. This is what it looks like on a normal week.</p>
+      <div class="values">
+        <div><b>Build for the real floor.</b><p>Our work runs in live stores, banks and campuses. We test it where it lives, not just on a laptop.</p></div>
+        <div><b>Small team. Big ownership.</b><p>Interns ship. Engineers talk to customers. Everyone owns something that matters.</p></div>
+        <div><b>Celebrate the wins.</b><p>A launch, a new customer, Onam, a birthday. It all gets celebrated, usually with cake and sometimes with a long dinner.</p></div>
+        <div><b>Step out together.</b><p>We leave the office as a team. The best ideas often show up away from the desk.</p></div>
+      </div>
+      <div class="mosaic" aria-label="Life at ThinkNeural"><figure class="m-a"><button type="button" class="ph" data-cap="The whole team, out of the office."><img src="/img/img-3958fab627.jpg" alt="The ThinkNeural team standing together outdoors among coconut palms" style="object-position:50% 40%"></button></figure><figure class="m-b"><button type="button" class="ph" data-cap="Cake at the desk. Somebody had a good day."><img src="/img/img-c87e388260.jpg" alt="A team member smiling as she is handed a slice of cake at her desk" style="object-position:50% 55%"></button></figure><figure class="m-c"><button type="button" class="ph" data-cap="Every win gets a slice."><img src="/img/img-8f6e1f8f27.jpg" alt="A team member receiving cake at his desk while colleagues work nearby" style="object-position:50% 60%"></button></figure><figure class="m-d"><button type="button" class="ph" data-cap="Team dinner."><img src="/img/img-c1a4a298cd.jpg" alt="The team around a long table at a restaurant dinner"></button></figure><figure class="m-e"><button type="button" class="ph" data-cap="Evenings that go on a little longer."><img src="/img/img-6109130a23.jpg" alt="The team gathered around a table under a festive canopy at night"></button></figure><figure class="m-j"><button type="button" class="ph" data-cap="Onam at ThinkNeural. The whole team around the pookalam."><img src="/img/img-95607215e3.jpg" alt="The ThinkNeural team in traditional Kerala dress around a flower pookalam, under marigold garlands" style="object-position:50% 55%"></button></figure><figure class="m-f"><button type="button" class="ph" data-cap="Backstage at a launch, mics still on."><img src="/img/img-2260cd5bb6.jpg" alt="Three team members smiling backstage with headset mics" style="object-position:50% 35%"></button></figure><figure class="m-g"><button type="button" class="ph" data-cap="Heads down on the floor."><img src="/img/img-ea79120509.jpg" alt="A team member working at a desk with several laptops in the open office"></button></figure><figure class="m-h"><button type="button" class="ph" data-cap="Deep work in the quiet room."><img src="/img/img-29b2f08954.jpg" alt="An engineer working on code across several laptops in a small meeting room"></button></figure><figure class="m-i"><button type="button" class="ph" data-cap="Home base in the Kerala Startup Mission ecosystem."><img src="/img/img-eddc3f56e4.jpg" alt="The entrance of the Kerala Startup Mission building" style="object-position:50% 60%"></button></figure></div>
+      <div class="ctas"><a class="btn btn-primary" href="#careers">Join the team</a></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap a-split">
+      <div>
+        <div class="kicker">FAQ</div>
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div class="card">
+        <details open style="margin-top:0"><summary>What is ThinkNeuralAI Platform?</summary>
+          <p>ThinkNeuralAI is a suite of enterprise AI agents designed to automate business processes, analyze visual data, and enable intelligent decision-making. Our product ecosystem includes:</p>
+          <ul class="prods">
+            <li><b>Sakshi.ai.</b> Visual AI for analysing CCTV feeds, headcount, compliance, and operational insights.</li>
+            <li><b>SpaceZap.ai.</b> AI-driven outlet and store design automation using mobile scans and automated layout generation.</li>
+            <li><b>DataDime.ai.</b> A private enterprise GPT that lets users chat with their data, generate insights, automate reports, and forecast business outcomes.</li>
+          </ul>
+        </details>
+        <a class="morefaq" href="#faq">See more FAQs</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="a-cta">
+    <div class="wrap card">
+      <div class="kicker">Seeing is believing</div>
+      <h2>See ThinkNeural.ai in action.</h2>
+      <p>We would love to show you a demo. Get specific use cases, personalised pricing, and answers to all your questions.</p>
+      <div class="ctas"><a class="btn btn-primary" href="#contact">Request a demo</a></div>
+    </div>
+  </section>
+</main>
+
+
+<main id="eventsView">
+  <section class="a-hero">
+    <div class="wrap">
+      <div class="kicker">News and events</div>
+      <h1>Out on the <em>retail floor.</em></h1>
+      <p>Where ThinkNeural shows up. Trade shows, launches, talks and the teams we meet along the way.</p>
+    </div>
+  </section>
+
+  <section id="instore-asia">
+    <div class="wrap card">
+      <div class="story">
+        <div class="body">
+          <div class="kicker">Featured <b>·</b> Trade show</div>
+          <h2>ThinkNeural at In&#8209;Store Asia, Mumbai.</h2>
+          <div class="meta"><span>Bombay Exhibition Centre, Mumbai</span><span>Stand F42</span><span class="todo" id="evDate">Add dates</span></div>
+          <p>In-Store Asia is the largest trade fair in the Indian subcontinent for store design, visual merchandising and retail technology. Every year it brings retail and brand teams to Mumbai to see what comes next for the store.</p>
+          <p>We were at stand F42 with one message. From site to store in hours, not weeks.</p>
+          <p>Visitors watched SpaceZap at work. Scan a raw space. Automate the design. Get the RECCE, ten technical layouts and the BOQ on the spot. The rest of the ThinkNeural ecosystem came along too. Sakshi for what happens on the floor once the store opens. DataDime for the questions that follow.</p>
+          <p>We also took the stage at the In-Store Asia conference. Our team joined a panel on fit-outs and infrastructure for new retail projects. It was a good room to make the case that store rollouts can move at the speed of software.</p>
+          <p>Thank you to everyone who stopped by the stand and the session. If we met at the show, let's keep the conversation going.</p>
+          <div class="ctas"><a class="btn btn-primary" href="#contact">Book a follow-up demo</a></div>
+        </div>
+        <div class="showcase">
+          <div><div class="tag">Project turnaround</div><p><b class="big-n">&lt;1 day</b>From site scan to construction-ready set.</p></div>
+          <div><div class="tag">Automated output</div><p><b class="big-n">10</b>Technical layouts generated per store.</p></div>
+          <div><div class="tag">Operational savings</div><p><b class="big-n">50%+</b>Compared with the manual fit-out process.</p></div>
+        </div>
+      </div>
+      <div class="gallery" aria-label="In-Store Asia photos">
+        <figure class="big"><button type="button" class="ph" data-cap="The ThinkNeural team at stand F42."><img src="/img/img-5eff913353.jpg" alt="The ThinkNeural team standing at stand F42 beside the SpaceZap AI banner" style="object-position:50% 60%"></button></figure>
+        <figure><button type="button" class="ph" data-cap="Speaking on the conference panel."><img src="/img/img-c301a8a3e6.jpg" alt="A ThinkNeural team member speaking on stage during the panel discussion"></button></figure>
+        <figure><button type="button" class="ph" data-cap="The panel on fit-outs and infrastructure for new retail projects."><img src="/img/img-d593a1d72a.jpg" alt="Panel speakers standing together on the In-Store Asia conference stage"></button></figure>
+        <figure><button type="button" class="ph" data-cap="Live SpaceZap demos at the stand."><img src="/img/img-3f9772fe74.jpg" alt="Visitors looking at a SpaceZap demo on a tablet at the stand"></button></figure>
+        <figure class="wide"><button type="button" class="ph" data-cap="The team at In-Store Asia."><img src="/img/img-38417e0f91.jpg" alt="Five members of the ThinkNeural team at the venue" style="object-position:50% 30%"></button></figure>
+      </div>
+      <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer"><button type="button" class="lb-close" aria-label="Close photo">×</button><img alt=""><p></p></div>
+    </div>
+  </section>
+
+
+  <section id="ksum">
+    <div class="wrap card">
+      <div class="story">
+        <div class="body">
+          <div class="kicker">Milestone <b>·</b> Kerala Startup Mission</div>
+          <h2>Backed by Kerala Startup Mission. Recognised by Startup India.</h2>
+          <div class="meta"><span>KSUM LEAD program</span><span>Productisation Grant</span><span>Startup India recognised</span><span class="todo">Add date</span></div>
+          <p>ThinkNeural is incubated with Kerala Startup Mission under its LEAD program. KSUM is the Government of Kerala's nodal agency for startups. It sits at the centre of one of the most active startup ecosystems in the country.</p>
+          <p>We have also received KSUM's Productisation Grant. The grant backs startups that are turning a working product into a market-ready one. For us, it backs the work of taking SpaceZap, Sakshi and DataDime from proven products to rollouts at scale.</p>
+          <p>ThinkNeural is also recognised under Startup India, the Government of India's flagship programme for startups.</p>
+          <p>Building deep tech from Kerala means building alongside this ecosystem. We are proud to be part of it.</p>
+        </div>
+        <div class="showcase">
+          <div class="logo-tile"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px"  viewBox="0 0 165 92" enable-background="new 0 0 165 92" xml:space="preserve" class="ksum-logo" role="img" aria-label="Kerala Startup Mission"><g><g><polygon fill="#00AEEF" points="65.471,26.929 56.1,32.387 54.611,24.449 63.652,17.118"></polygon><polygon fill="#00AEEF" points="83.386,15.96 74.346,21.142 72.252,9.125 81.291,1.793"></polygon><polygon fill="#00AEEF" points="95.183,26.324 85.481,29.63 83.386,16.015 92.646,10.944"></polygon><polygon fill="#00AEEF" points="107.365,40.435 97.276,41.372 95.072,25.606 104.828,23.292"></polygon><polygon fill="#00AEEF" points="88.017,42.75 78.259,44.679 76.385,32.883 85.812,28.914"></polygon><polygon fill="#00AEEF" points="99.978,56.75 89.892,56.475 87.851,42.639 97.606,40.986"></polygon><polygon fill="#00AEEF" points="76.44,32.991 67.124,36.739 65.416,26.819 74.511,21.029"></polygon><polygon fill="#00AEEF" points="68.999,46.771 59.297,48.537 57.643,40.599 67.18,36.905"></polygon><polygon fill="#00AEEF" points="80.409,56.639 70.597,56.639 68.833,46.607 78.425,44.733"></polygon><polygon fill="#00AEEF" points="60.951,56.529 50.974,56.088 49.54,49.805 59.242,48.371"></polygon><polygon fill="#00AEEF" points="57.918,40.599 48.437,43.961 46.839,37.346 56.155,32.44"></polygon><polygon fill="#00AEEF" points="49.761,50.08 39.949,50.686 38.736,45.946 48.382,43.906"></polygon></g><g><path fill="#0B9444" d="M30.701,62.564h2.189v4.319h0.043c0.218-0.377,0.45-0.725,0.667-1.073l2.218-3.246h2.711l-3.233,4.16                           l3.407,5.609h-2.58l-2.392-4.219l-0.841,1.029v3.188h-2.189V62.564z"></path><path fill="#0B9444" d="M53.131,68.203h-3.595v2.318h4.015v1.813h-6.233v-9.771h6.03v1.813h-3.812v2.028h3.595V68.203z"></path><path fill="#0B9444" d="M62.775,62.693c0.71-0.115,1.769-0.202,2.943-0.202c1.45,0,2.464,0.218,3.16,0.769                           c0.58,0.465,0.898,1.145,0.898,2.044c0,1.246-0.884,2.103-1.725,2.406v0.043c0.681,0.274,1.058,0.929,1.305,1.827                           c0.304,1.102,0.608,2.377,0.797,2.754h-2.261c-0.16-0.275-0.391-1.072-0.681-2.275c-0.261-1.218-0.682-1.552-1.58-1.565h-0.667                           v3.842h-2.189V62.693z M64.964,66.898h0.87c1.102,0,1.754-0.551,1.754-1.406c0-0.899-0.609-1.35-1.624-1.363                           c-0.537,0-0.841,0.044-1,0.073V66.898z"></path><path fill="#0B9444" d="M81.493,69.826l-0.695,2.508h-2.291l2.986-9.771h2.898l3.029,9.771h-2.377l-0.754-2.508H81.493z                             M83.972,68.174l-0.607-2.072c-0.174-0.58-0.348-1.306-0.493-1.885h-0.028c-0.146,0.579-0.289,1.318-0.449,1.885l-0.58,2.072                           H83.972z"></path><path fill="#0B9444" d="M96.444,62.564h2.218v7.914h3.885v1.855h-6.103V62.564z"></path><path fill="#0B9444" d="M113.931,69.826l-0.695,2.508h-2.291l2.986-9.771h2.898l3.029,9.771h-2.377l-0.754-2.508H113.931z                             M116.408,68.174l-0.608-2.072c-0.174-0.58-0.348-1.306-0.492-1.885h-0.029c-0.146,0.579-0.289,1.318-0.449,1.885l-0.58,2.072                           H116.408z"></path></g><g><g><path fill="#231F20" d="M0.583,88.842c0.771,0.395,1.955,0.789,3.177,0.789c1.316,0,2.011-0.545,2.011-1.372                             c0-0.79-0.602-1.241-2.124-1.786c-2.105-0.731-3.478-1.897-3.478-3.74c0-2.162,1.805-3.815,4.793-3.815                             c1.429,0,2.481,0.301,3.233,0.64l-0.639,2.313c-0.508-0.244-1.41-0.602-2.65-0.602c-1.241,0-1.843,0.563-1.843,1.221                             c0,0.81,0.715,1.166,2.35,1.787c2.237,0.826,3.29,1.992,3.29,3.777c0,2.124-1.635,3.93-5.113,3.93                             c-1.447,0-2.876-0.375-3.59-0.771L0.583,88.842z"></path><path fill="#231F20" d="M12.874,81.529H9.471v-2.406h9.738v2.406H15.75v10.264h-2.876V81.529z"></path><path fill="#231F20" d="M22.12,88.541l-0.903,3.252h-2.97l3.872-12.67h3.76l3.93,12.67h-3.083l-0.978-3.252H22.12z                               M25.334,86.396l-0.79-2.688c-0.226-0.752-0.451-1.691-0.639-2.443h-0.038c-0.188,0.752-0.376,1.711-0.583,2.443l-0.752,2.688                             H25.334z"></path><path fill="#231F20" d="M31.289,79.292c0.921-0.149,2.293-0.265,3.816-0.265c1.88,0,3.195,0.283,4.098,0.998                             c0.752,0.602,1.166,1.483,1.166,2.649c0,1.616-1.147,2.726-2.237,3.12v0.057c0.884,0.357,1.372,1.203,1.692,2.368                             c0.395,1.431,0.79,3.084,1.034,3.572h-2.933c-0.207-0.356-0.507-1.392-0.883-2.951c-0.338-1.579-0.883-2.012-2.049-2.03h-0.864                             v4.982h-2.84V79.292z M34.127,84.743h1.128c1.429,0,2.274-0.714,2.274-1.823c0-1.166-0.79-1.748-2.105-1.768                             c-0.695,0-1.09,0.057-1.297,0.095V84.743z"></path><path fill="#231F20" d="M44.669,81.529h-3.403v-2.406h9.738v2.406h-3.459v10.264h-2.876V81.529z"></path><path fill="#231F20" d="M55.173,79.123v7.293c0,2.182,0.827,3.29,2.293,3.29c1.504,0,2.331-1.054,2.331-3.29v-7.293h2.857v7.105                             c0,3.91-1.974,5.771-5.283,5.771c-3.195,0-5.075-1.769-5.075-5.81v-7.066H55.173z"></path><path fill="#231F20" d="M64.925,79.292c0.883-0.149,2.125-0.265,3.873-0.265c1.767,0,3.026,0.34,3.873,1.017                             c0.808,0.64,1.354,1.69,1.354,2.933c0,1.24-0.414,2.293-1.166,3.008c-0.978,0.922-2.425,1.334-4.117,1.334                             c-0.376,0-0.714-0.019-0.978-0.056v4.53h-2.838L64.925,79.292L64.925,79.292z M67.763,85.044                             c0.245,0.058,0.545,0.075,0.959,0.075c1.522,0,2.463-0.771,2.463-2.067c0-1.166-0.809-1.86-2.237-1.86                             c-0.583,0-0.978,0.057-1.185,0.111V85.044z"></path><path fill="#231F20" d="M89.94,86.943c-0.058-1.523-0.113-3.365-0.113-5.209h-0.057c-0.396,1.617-0.92,3.423-1.41,4.908                             l-1.541,4.942h-2.236l-1.354-4.906c-0.414-1.485-0.847-3.29-1.147-4.944h-0.038c-0.074,1.711-0.131,3.666-0.227,5.246                             l-0.223,4.813h-2.652l0.809-12.67h3.815l1.24,4.229c0.396,1.467,0.791,3.045,1.072,4.53h0.057                             c0.357-1.467,0.789-3.14,1.203-4.549l1.354-4.211h3.739l0.695,12.671h-2.801L89.94,86.943z"></path><path fill="#231F20" d="M97.792,79.123v12.67h-2.877v-12.67H97.792z"></path><path fill="#231F20" d="M100.159,88.842c0.77,0.395,1.955,0.789,3.176,0.789c1.316,0,2.012-0.545,2.012-1.372                             c0-0.79-0.602-1.241-2.125-1.786c-2.104-0.731-3.477-1.897-3.477-3.74c0-2.162,1.805-3.815,4.793-3.815                             c1.43,0,2.482,0.301,3.234,0.64l-0.642,2.313c-0.506-0.244-1.407-0.602-2.649-0.602c-1.24,0-1.842,0.563-1.842,1.221                             c0,0.81,0.715,1.166,2.35,1.787c2.238,0.826,3.291,1.992,3.291,3.777c0,2.124-1.637,3.93-5.113,3.93                             c-1.449,0-2.877-0.375-3.592-0.771L100.159,88.842z"></path><path fill="#231F20" d="M110.099,88.842c0.771,0.395,1.955,0.789,3.178,0.789c1.314,0,2.013-0.545,2.013-1.372                             c0-0.79-0.603-1.241-2.125-1.786c-2.104-0.731-3.479-1.897-3.479-3.74c0-2.162,1.806-3.815,4.795-3.815                             c1.429,0,2.48,0.301,3.232,0.64l-0.639,2.313c-0.508-0.244-1.41-0.602-2.65-0.602s-1.842,0.563-1.842,1.221                             c0,0.81,0.713,1.166,2.35,1.787c2.236,0.826,3.289,1.992,3.289,3.777c0,2.124-1.635,3.93-5.113,3.93                             c-1.446,0-2.877-0.375-3.59-0.771L110.099,88.842z"></path><path fill="#231F20" d="M122.821,79.123v12.67h-2.877v-12.67H122.821z"></path><path fill="#231F20" d="M136.692,85.326c0,4.154-2.521,6.674-6.224,6.674c-3.76,0-5.959-2.839-5.959-6.448                             c0-3.798,2.427-6.636,6.166-6.636C134.567,78.916,136.692,81.83,136.692,85.326z M127.538,85.495                             c0,2.481,1.164,4.229,3.082,4.229c1.938,0,3.045-1.843,3.045-4.306c0-2.274-1.09-4.229-3.063-4.229                             C128.665,81.189,127.538,83.033,127.538,85.495z"></path><path fill="#231F20" d="M138.36,91.793v-12.67h3.348l2.631,4.643c0.752,1.336,1.504,2.914,2.068,4.344h0.057                             c-0.188-1.674-0.244-3.385-0.244-5.282v-3.704h2.631v12.67h-3.008l-2.707-4.889c-0.752-1.354-1.578-2.988-2.199-4.473                             l-0.057,0.019c0.076,1.673,0.113,3.459,0.113,5.526v3.816H138.36z"></path></g></g></g><g><circle fill="none" stroke="#000000" stroke-width="0.58" stroke-miterlimit="10" cx="156.031" cy="83.228" r="4.311"></circle><g><path d="M154.471,85.561v-4.295h1.904c0.383,0,0.674,0.039,0.873,0.115c0.199,0.078,0.358,0.214,0.478,0.409                           s0.179,0.411,0.179,0.647c0,0.305-0.099,0.562-0.296,0.771s-0.502,0.342-0.914,0.398c0.15,0.072,0.265,0.144,0.343,0.214                           c0.166,0.152,0.323,0.343,0.472,0.571l0.747,1.169h-0.715l-0.568-0.894c-0.166-0.258-0.303-0.455-0.41-0.592                           s-0.204-0.232-0.288-0.287c-0.086-0.055-0.172-0.093-0.26-0.114c-0.064-0.014-0.17-0.021-0.316-0.021h-0.659v1.907H154.471z                             M155.039,83.161h1.222c0.26,0,0.463-0.026,0.609-0.081c0.146-0.053,0.258-0.139,0.334-0.258c0.076-0.117,0.114-0.246,0.114-0.385                           c0-0.203-0.074-0.37-0.222-0.501s-0.38-0.196-0.698-0.196h-1.359V83.161z"></path></g></g></svg><small>Incubated under the LEAD program</small></div>
+          <div><div class="tag">Grant</div><p><b class="big-n">Productisation</b>Awarded by Kerala Startup Mission.</p></div>
+          <div><div class="tag">Recognition</div><p><b class="big-n">Startup India</b>Recognised under the Government of India's Startup India initiative.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <section id="huddle">
+    <div class="wrap card">
+      <div class="story">
+        <div class="body">
+          <div class="kicker">Product launch <b>·</b> Startup festival</div>
+          <h2>Launching on stage at Huddle Global 2025.</h2>
+          <div class="meta"><span>The Leela Raviz, Kovalam</span><span>12 to 14 December 2025</span><span class="todo">Add product name</span></div>
+          <p>Huddle Global is India's largest beachside startup festival. Kerala Startup Mission runs it on the seafront at Kovalam. The 2025 edition was its seventh.</p>
+          <p>ThinkNeural was selected for the festival's Product Launch track. Our team took the main stage and launched our product to a room of founders, investors and industry leaders.</p>
+          <p>Three days by the sea also meant three days of conversations. Investors, mentors, fellow founders and future customers, all in one place.</p>
+          <p>Thank you to the KSUM team for building a stage like this for Kerala startups.</p>
+          <div class="ctas"><a class="btn btn-primary" href="#contact">See it in a demo</a></div>
+        </div>
+        <div class="showcase">
+          <div><div class="tag">On stage</div><p><b class="big-n">Product launch</b>Selected for the Product Launch track.</p></div>
+          <div><div class="tag">Edition</div><p><b class="big-n">7th</b>India's largest beachside startup festival.</p></div>
+          <div><div class="tag">Organiser</div><p><b class="big-n">KSUM</b>Kerala Startup Mission, Kovalam.</p></div>
+        </div>
+      </div>
+      <div class="gallery g4" aria-label="Huddle Global 2025 photos"><figure class="big"><button type="button" class="ph" data-cap="Our product launch on the Huddle Global main stage."><img src="/img/img-0b3e08454f.jpg" alt="ThinkNeural team presenting on stage under a Product Launch screen"></button></figure><figure class="span2"><button type="button" class="ph" data-cap="Backstage, mics still on."><img src="/img/img-abebfbdea8.jpg" alt="Three ThinkNeural team members smiling backstage with headset mics"></button></figure><figure><button type="button" class="ph" data-cap="The team at Huddle Global 2025."><img src="/img/img-c169995ec4.jpg" alt="Three ThinkNeural team members at the Huddle Global 2025 photo wall"></button></figure><figure><button type="button" class="ph" data-cap="Come huddle for growth."><img src="/img/img-da3baa4ead.jpg" alt="Four ThinkNeural team members at the Huddle Global photo wall"></button></figure></div>
+    </div>
+  </section>
+
+  <section id="secufest">
+    <div class="wrap card">
+      <div class="story">
+        <div class="body">
+          <div class="kicker">Sponsorship <b>·</b> Trade show</div>
+          <h2>Sakshi AI at Secu Fest Expo 2026, Kollam.</h2>
+          <div class="meta"><span>Kollam</span><span>Platinum Sponsor</span><span>Stall P3</span><span class="todo">Add dates</span></div>
+          <p>Secu Fest Expo 2026 is Kerala's largest security and automation expo. It is organised by AKESSIA, the All Kinds of Electronic Security and System Integrators Association. That is exactly the room Sakshi was built for.</p>
+          <p>ThinkNeural came on board as Platinum Sponsor and Platinum Technology Partner, with Sakshi AI at stall P3.</p>
+          <p>Our message was simple. Your CCTV sees everything. Does it tell you anything? Sakshi turns any camera into real-time alerts, insights and compliance. No new hardware.</p>
+          <p>At the stall we walked visitors through live alerts and dashboards. We talked through use cases across retail and consumer electronics, BFSI and gold loan, education, manufacturing and pharma, and salons and wellness.</p>
+          <p>On stage, AKESSIA honoured Sakshi AI with a memento. Thank you to the AKESSIA team for a well-run expo.</p>
+          <p>Integrators are how Sakshi reaches every store, bank and campus in Kerala. If you install cameras, let's talk about partnering.</p>
+          <div class="ctas"><a class="btn btn-primary" href="#contact">Partner with us</a></div>
+        </div>
+        <div class="showcase">
+          <div><div class="tag">Sponsorship</div><p><b class="big-n">Platinum</b>Sponsor and technology partner.</p></div>
+          <div><div class="tag">Organiser</div><p><b class="big-n">AKESSIA</b>Kerala's security and system integrators.</p></div>
+          <div><div class="tag">Sakshi AI</div><p><b class="big-n">0</b>New hardware needed. Runs on the CCTV you own.</p></div>
+        </div>
+      </div>
+      <div class="gallery" aria-label="Secu Fest Expo photos"><figure class="big"><button type="button" class="ph" data-cap="Sakshi AI honoured on stage at Secu Fest Expo 2026."><img src="/img/img-3e1ae17b5b.jpg" alt="Sakshi AI memento presented on stage at Secu Fest Expo 2026"></button></figure><figure><button type="button" class="ph" data-cap="Visitors at the Sakshi AI stall."><img src="/img/img-30c81f67a0.jpg" alt="Visitors talking with the team at the Sakshi AI stall"></button></figure><figure><button type="button" class="ph" data-cap="Stall P3. Any camera, real-time intelligence."><img src="/img/img-43b52ab1f9.jpg" alt="The Sakshi AI stall with its banner and live screen"></button></figure><figure><button type="button" class="ph" data-cap="On stage with the AKESSIA team."><img src="/img/img-9b8257b810.jpg" alt="Sakshi AI memento being presented on stage in front of the Secu Fest Expo backdrop"></button></figure><figure class="wide fit"><button type="button" class="ph" data-cap="Sakshi AI listed as Platinum Sponsor, stall P3."><img src="/img/img-8313a330f3.jpg" alt="Secu Fest Expo 2026 sponsor board listing Sakshi AI as Platinum Sponsor at stall P3"></button></figure></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">More from the field</div>
+      <h2>Activities and events</h2>
+      <ul class="timeline">
+        <li><time>In-Store Asia</time><div><h3>Exhibitor and panel speaker, Mumbai</h3><p>Stand F42 with live SpaceZap demos, plus a conference panel on fit-outs and infrastructure for new retail projects. <a class="morefaq" style="margin:0" href="#instore-asia">Read the story</a></p></div></li>
+        <li><time>KSUM</time><div><h3>Incubation and Productisation Grant</h3><p>Incubated with Kerala Startup Mission under the LEAD program, and awarded KSUM's Productisation Grant. <a class="morefaq" style="margin:0" href="#ksum">Read more</a></p></div></li>
+        <li><time>Dec 2025</time><div><h3>Product launch, Huddle Global 2025, Kovalam</h3><p>Selected for the Product Launch track at Kerala Startup Mission's beachside startup festival. <a class="morefaq" style="margin:0" href="#huddle">See the photos</a></p></div></li>
+        <li><time>Secu Fest 2026</time><div><h3>Platinum Sponsor, Secu Fest Expo, Kollam</h3><p>Sakshi AI at stall P3 at Kerala's largest security and automation expo, organised by AKESSIA. <a class="morefaq" style="margin:0" href="#secufest">See the photos</a></p></div></li>
+        <li class="next"><time>Next</time><div><h3>Where to find us next</h3><p>Planning a show, a launch or a store visit with us? Tell us and we will meet you there.</p></div></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+
+<main id="careersView">
+  <section class="a-hero">
+    <div class="wrap c-hero">
+      <div>
+        <div class="kicker">Careers at ThinkNeural</div>
+        <h1>Build AI for <em>the real world.</em></h1>
+        <p>We build AI that works inside stores, banks and campuses. Not in a demo. On real floors, with real cameras and real deadlines.</p>
+        <p>If you want to learn fast and ship things people use, start here.</p>
+        <div class="ctas"><a class="btn btn-primary" href="#internships">See internships</a><a class="btn btn-ghost" href="#openings">Open roles</a></div>
+      </div>
+      <div class="c-photos">
+        <figure><button type="button" class="ph" data-cap="The ThinkNeural team."><img src="/img/img-81de7b64bf.jpg" alt="The ThinkNeural team standing together in the office"></button></figure>
+        <figure><button type="button" class="ph" data-cap="A working day at the office."><img src="/img/img-538ecb50d6.jpg" alt="Team members working at their desks beside a SpaceZap AI banner" style="object-position:50% 70%"></button></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="internships">
+    <div class="wrap">
+      <div class="kicker">Internship programs</div>
+      <h2>Two ways in. Both paid.</h2>
+      <p>Every intern works on live projects with our team and receives a stipend for the full internship.</p>
+      <div class="tracks">
+        <article class="track">
+          <div class="who">For MBA and PGDM students</div>
+          <h3>Business internship</h3>
+          <div class="facts2"><span>2 months</span><span>Stipend</span></div>
+          <p>Work next to the people who sell, plan and deliver our products. You get real accounts, real rollouts and real numbers.</p>
+          <ul class="areas">
+            <li><b>Sales and Marketing</b><span>Prospect, pitch and grow the pipeline for SpaceZap, Sakshi and DataDime.</span></li>
+            <li><b>Project Management</b><span>Plan and track customer rollouts from kickoff to go-live.</span></li>
+            <li><b>Operations</b><span>Keep deployments, vendors and internal processes running on time.</span></li>
+          </ul>
+        </article>
+        <article class="track">
+          <div class="who">For engineering students</div>
+          <h3>Engineering internship</h3>
+          <div class="facts2"><span>6 months</span><span>Stipend</span><span>Opportunity to join full time</span></div>
+          <p>Six months is long enough to own something. You build alongside our engineers on products running at customer sites today.</p>
+          <ul class="areas">
+            <li><b>Computer vision</b><span>Models that turn CCTV feeds into data for Sakshi.</span></li>
+            <li><b>Spatial AI and design automation</b><span>Layouts, MEP and BOQ generation for SpaceZap.</span></li>
+            <li><b>LLMs, cloud and full stack</b><span>DataDime, the platform and the apps our customers use.</span></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="apply">
+    <div class="wrap card">
+      <div class="kicker">How to apply</div>
+      <h2>Simple. Three steps.</h2>
+      <ol class="steps">
+        <li><b>Send your CV</b><p>Tell us which internship you want and when you can start.</p></li>
+        <li><b>Talk to us</b><p>A short conversation with the team you would join.</p></li>
+        <li><b>Get started</b><p>Join a live project from your first week.</p></li>
+      </ol>
+      <p style="margin-top:18px">Send your CV to <a class="morefaq" style="margin:0" href="mailto:careers@tneuralai.com?subject=Internship%20application">careers@tneuralai.com</a>. Mention the internship in the subject line.</p>
+      <div class="ctas"><a class="btn btn-primary" href="mailto:careers@tneuralai.com?subject=Internship%20application">Apply by email</a></div>
+    </div>
+  </section>
+
+  <section id="openings">
+    <div class="wrap">
+      <div class="kicker">Open roles</div>
+      <h2>Jobs for experienced people.</h2>
+      <p>We post openings for experienced candidates here as they come up. Check back often.</p>
+      <div class="jobs-empty">
+        <b>No open roles right now.</b>
+        <p>New roles are posted here first. If you are great at what you do and believe in what we are building, send your CV to <a class="morefaq" style="margin:0" href="mailto:careers@tneuralai.com?subject=Experienced%20role">careers@tneuralai.com</a> anyway.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="glow g1" aria-hidden="true"></div><div class="glow g2" aria-hidden="true"></div>
+  <div class="foot-in">
+    <div class="foot-top">
+      <div class="cols">
+        <div><h4>Products</h4><ul>
+          <li><a href="https://thinkneural.ai/products/spacezap">SpaceZap AI</a></li>
+          <li><a href="https://thinkneural.ai/products/sakshi">Sakshi AI</a></li>
+          <li><a href="https://thinkneural.ai/products/datadime">DataDime AI</a></li></ul></div>
+        <div><h4>Support</h4><ul><li><a href="https://thinkneural.ai/contactus">Contact Us</a></li><li><a href="#careers">Careers</a></li><li><a href="mailto:info@tneuralai.com">info@tneuralai.com</a></li><li><a href="mailto:careers@tneuralai.com">careers@tneuralai.com</a></li></ul></div>
+        <div><h4>Policies</h4><ul>
+          <li><a href="https://thinkneural.ai/policies/platform-licence-agreement">Platform licence agreement</a></li>
+          <li><a href="https://thinkneural.ai/policies/content-rules">Content rules</a></li>
+          <li><a href="https://thinkneural.ai/policies/cookies-policy">Cookies policy</a></li>
+          <li><a href="https://thinkneural.ai/policies/copyright-policy">Copyright policy</a></li>
+          <li><a href="https://thinkneural.ai/policies/privacy-policy">Privacy policy</a></li></ul></div>
+      </div>
+      <div class="social"><a href="#home">X (Twitter)</a><span>•</span><a href="#home">LinkedIn</a><span>•</span><a href="#home">Meta</a></div>
+    </div>
+    <div class="foot-mark"><span class="big" aria-hidden="true">thinkneural.ai</span><p>© ThinkNeural.ai 2026.</p></div>
+  </div>
+</footer>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
