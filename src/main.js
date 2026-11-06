@@ -13,17 +13,20 @@ const lerp = (a, b, t) => a + (b - a) * t;
 let isAbout = false, page = 'home';
 const EVENT_IDS = ['events', 'instore-asia', 'ksum', 'huddle', 'secufest'];
 const CAREER_IDS = ['careers', 'internships', 'apply', 'openings'];
+const POLICY_IDS = ['privacy-policy', 'platform-licence-agreement', 'content-rules', 'cookies-policy', 'copyright-policy'];
 function route() {
   const h = location.hash.slice(1);
   const prev = page;
-  page = h === 'about' ? 'about' : EVENT_IDS.includes(h) ? 'events' : CAREER_IDS.includes(h) ? 'careers' : 'home';
+  page = h === 'about' ? 'about' : EVENT_IDS.includes(h) ? 'events' : CAREER_IDS.includes(h) ? 'careers' : POLICY_IDS.includes(h) ? 'policies' : 'home';
   isAbout = page !== 'home';
   const wasAbout = prev !== 'home';
   document.documentElement.classList.toggle('is-about', page === 'about');
   document.documentElement.classList.toggle('is-events', page === 'events');
   document.documentElement.classList.toggle('is-careers', page === 'careers');
+  document.documentElement.classList.toggle('is-policies', page === 'policies');
+  document.querySelectorAll('#policiesView .policy').forEach(el => { el.hidden = page === 'policies' && el.id !== h; });
   if (isAbout) {
-    const t = ((h !== 'events' && EVENT_IDS.includes(h)) || (h !== 'careers' && CAREER_IDS.includes(h))) ? document.getElementById(h) : null;
+    const t = ((h !== 'events' && EVENT_IDS.includes(h)) || (h !== 'careers' && CAREER_IDS.includes(h)) || POLICY_IDS.includes(h)) ? document.getElementById(h) : null;
     if (t) requestAnimationFrame(() => t.scrollIntoView({ block: 'start' }));
     else if (prev !== page) scrollTo(0, 0);
   }

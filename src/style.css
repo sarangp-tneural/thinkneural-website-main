@@ -321,3 +321,21 @@ select option{background:var(--navy)}
   .foot-mark{text-align:center;min-height:140px;padding-top:64px}
 }
 @media (max-width:520px){form{grid-template-columns:1fr}.logos{grid-template-columns:repeat(2,1fr)}.impact b{font-size:22px}.mod{grid-template-columns:1fr}}
+
+/* policies page */
+#policiesView{display:none}
+.is-policies #policiesView{display:block}
+.is-policies #homeView,.is-policies .rail{display:none}
+.is-policies .shade{background:rgba(2,2,26,.82)}
+#policiesView section{min-height:auto;display:block;padding:72px clamp(16px,5vw,72px) 24px}
+.policy-in{max-width:780px}
+.policy h1{font-size:clamp(34px,4.6vw,56px);margin:10px 0 6px}
+.policy .updated{color:var(--muted);font-family:var(--mono);font-size:13px}
+.policy h3{font-size:21px;margin:34px 0 8px}
+.policy h4{font-size:16px;margin:18px 0 6px;color:var(--aqua)}
+.policy p,.policy li{line-height:1.7;max-width:none}
+.policy ul{margin:8px 0 8px 20px;padding:0}
+.policy li{margin:6px 0}
+.policy a{color:var(--aqua)}
+#policiesView section[hidden]{display:none}
+#policiesView section{min-height:60vh}
