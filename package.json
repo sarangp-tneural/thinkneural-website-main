@@ -10,6 +10,7 @@
     "check:mobile": "node scripts/responsive-check.mjs after"
   },
   "dependencies": {
+    "@emailjs/browser": "^5.0.3",
     "three": "^0.128.0"
   },
   "devDependencies": {

@@ -13,7 +13,9 @@
       <div class="field full"><label for="fNeed">What are you looking to solve?</label><textarea id="fNeed" name="need"></textarea></div>
       <div class="formerr" id="formErr" role="alert"></div>
       <div class="field full"><button class="btn btn-primary" type="submit" id="fSubmit">Request a demo</button></div>
-      <div class="formmsg" id="formMsg">Your request is ready to send to sales@tneuralai.com.
+      <div class="field hp" aria-hidden="true"><label for="fWebsite">Leave this field empty</label><input id="fWebsite" name="website" tabindex="-1" autocomplete="off"></div>
+      <div class="formmsg" id="formOk" role="status" tabindex="-1"><strong>Request received.</strong> Someone from our team will reach out shortly.</div>
+      <div class="formmsg" id="formMsg"><span id="formMsgText">We could not send this automatically. Send it by email instead.</span>
         <div class="ctas"><a class="btn btn-primary" id="mailLink" href="mailto:sales@tneuralai.com">Open in email</a><button class="btn btn-ghost" type="button" id="copyBtn">Copy details</button></div>
       </div>
     </form>

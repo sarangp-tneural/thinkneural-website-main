@@ -69,4 +69,4 @@ Serve `dist/` as static files. Directory URLs like `/blog/<slug>/` must resolve 
 ## Notes
 
 - Policy pages: the Privacy Policy is final; the other four are placeholders until their text is decided.
-- Contact form builds a `mailto:` to `sales@tneuralai.com` (no backend).
+- Contact form sends through [EmailJS](https://www.emailjs.com) from the browser. Copy `.env.example` to `.env.local` and set `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY` (restart `npm run dev` after changing). The template variables are `full-name`, `work-email`, `company`, `phone`, `company-size`, `help-message`. If sending fails or the keys are missing, the form offers an "Open in email" fallback to `sales@tneuralai.com`.
