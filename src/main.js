@@ -138,6 +138,7 @@ addEventListener('hashchange', route);
 
 /* ---------- Photo viewer ---------- */
 const lb = document.getElementById('lightbox');
+document.body.appendChild(lb); // lives in the Events section markup, which is hidden on other pages
 const lbImg = lb.querySelector('img'), lbCap = lb.querySelector('p');
 let lbItems = [], lbIdx = 0, lbOpener = null;
 function showLb(i) {
