@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
 import fs from 'node:fs';
 import path from 'node:path';
 import { POSTS, PUBLISHED } from './src/blog/posts.js';
@@ -100,4 +101,4 @@ function blogSeo() {
   };
 }
 
-export default defineConfig({ plugins: [htmlInclude(), blogSeo()] });
+export default defineConfig({ plugins: [tailwindcss(), htmlInclude(), blogSeo()] });

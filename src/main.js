@@ -468,7 +468,7 @@ RACKS.forEach(p => fixture('rack', p[0], p[1], 2.2, 2.2, 0.8));
 const sprites = [];
 function label(text, color, size, bubble) {
   const c = document.createElement('canvas'), ctx = c.getContext('2d');
-  const font = '600 40px "JetBrains Mono", ui-monospace, monospace';
+  const font = '500 40px "Geist Mono", ui-monospace, monospace';
   ctx.font = font;
   const w = bubble ? 64 : Math.ceil(ctx.measureText(text).width) + 20;
   c.width = w; c.height = 64; ctx.font = font;

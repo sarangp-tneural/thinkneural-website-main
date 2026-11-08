@@ -2,3 +2,5 @@ node_modules
 dist
 screenshots
 .env.local
+/releases
+/current

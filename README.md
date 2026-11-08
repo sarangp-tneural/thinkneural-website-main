@@ -70,3 +70,13 @@ Serve `dist/` as static files. Directory URLs like `/blog/<slug>/` must resolve 
 
 - Policy pages: the Privacy Policy is final; the other four are placeholders until their text is decided.
 - Contact form sends through [EmailJS](https://www.emailjs.com) from the browser. Copy `.env.example` to `.env.local` and set `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY` (restart `npm run dev` after changing). The template variables are `full-name`, `work-email`, `company`, `phone`, `company-size`, `help-message`. If sending fails or the keys are missing, the form offers an "Open in email" fallback to `sales@tneuralai.com`.
+- FAQ assistant: a floating chat widget (`src/components/layout/faqbot.html`, `src/faqbot.js`) that embeds the hosted FAQ bot in an iframe. Set `VITE_FAQBOT_URL` in `.env.local` to the bot's full URL; if unset or unreachable it shows a contact fallback. The host must allow framing that origin.
+
+
+## Typography (Thinkneural Typography Brief)
+
+One font (Plus Jakarta Sans 400-800), one scale. Geist Mono 500 is only for tiny technical labels (file names, numbers).
+The scale lives at the top of `src/style.css` as Tailwind utilities: `tn-display`, `tn-h1`, `tn-h2`, `tn-stat`, `tn-h3`,
+`tn-eyebrow`, `tn-lead`, `tn-body`, `tn-body-sm`, `tn-nav`, `tn-btn`, `tn-label`, `tn-input`, `tn-small`, `tn-mono`.
+Use them (or `@apply` them in a semantic class). Never add a raw `font-size`; if a style does not fit a row, ask first.
+Logo: use the files in `public/img/brand/`, never the name typed as text.
