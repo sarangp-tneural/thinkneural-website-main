@@ -695,6 +695,11 @@ select option{background:var(--navy)}
   .mmenu,.navtoggle span,.stagepill,.stickycta,nav{transition:none}
 }
 
+/* ---- loader handoff: hero stagger (first reveal only; src/loader.js adds .tn-rise with --i) ---- */
+@keyframes tn-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.tn-rise{animation:tn-rise .6s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(.25s + var(--i,0) * 60ms)}
+@media (prefers-reduced-motion:reduce){.tn-rise{animation:none}}
+
 /* ---- faq bot ---- */
 .fq-launch{position:fixed;z-index:8;right:max(20px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;border:0;background:var(--grad);color:#02021A;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 28px rgba(18,167,238,.4),0 0 0 1px rgba(155,231,245,.25);transition:transform .2s,opacity .2s}
 .fq-launch.hide{opacity:0;visibility:hidden;pointer-events:none}
@@ -725,12 +730,13 @@ html.menu-open .fq-launch,html.menu-open .fq-panel{display:none}
 }
 @media (pointer:coarse){.fq-btn{width:44px;height:44px}}
 /* phone: the chat icon sits at the very bottom; it rides up above the sticky "Request a demo" bar only while that bar is showing */
-.fq-launch{transition:transform .2s,opacity .2s,bottom .25s}
+.fq-launch{transition:transform .25s,opacity .2s}
 @media (max-width:640px){
-  html:has(.stickycta.show) .fq-launch{bottom:calc(72px + env(safe-area-inset-bottom))}
+  /* moved with transform (not bottom) so the slide never counts as layout shift */
+  html:has(.stickycta.show) .fq-launch{transform:translateY(calc(-1 * (72px + env(safe-area-inset-bottom) - max(20px,env(safe-area-inset-bottom)))))}
 }
 @media (max-width:900px) and (max-height:500px){
-  html:has(.stickycta.show) .fq-launch{bottom:max(20px,env(safe-area-inset-bottom))}
+  html:has(.stickycta.show) .fq-launch{transform:none}
 }
 @media (max-width:640px){
   .fq-panel{left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));width:auto;height:min(460px,calc(100dvh - 120px));max-height:calc(100dvh - 24px);border-radius:16px}

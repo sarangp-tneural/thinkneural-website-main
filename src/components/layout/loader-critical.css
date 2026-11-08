@@ -1,0 +1,65 @@
+/* Critical loader CSS (inlined in <head>; style.css loads later via JS in dev). Plain CSS: no Tailwind here.
+   Fonts/colours follow the type scale: status = eyebrow row (12px/600/.2em, aqua), % = Geist Mono 500 12px. */
+html{scrollbar-gutter:stable}
+html.is-loading{overflow:hidden}
+html.is-loading:not(.ld-exit) #stage{opacity:0}
+#stage{transition:opacity .8s cubic-bezier(.2,.7,.2,1)}
+html:not(.is-loading) #loader{display:none}
+#loader{--bg:#02021A;--ice:#9BE7F5;--aqua:#28BDDA;--cyan:#12A7EE;--muted:#8D9BB8;--ease:cubic-bezier(.2,.7,.2,1);
+  position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:var(--bg);color:#EEF4FB;overflow:hidden;
+  min-height:100vh;min-height:100dvh;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.ld-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(18,167,238,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(18,167,238,.07) 1px,transparent 1px);background-size:32px 32px;background-position:center;-webkit-mask-image:radial-gradient(60% 55% at 50% 50%,#000 20%,transparent 100%);mask-image:radial-gradient(60% 55% at 50% 50%,#000 20%,transparent 100%);animation:ld-fade .8s var(--ease) both}
+.ld-glow{position:absolute;left:50%;top:50%;width:min(900px,140vw);height:min(700px,110vh);transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(18,167,238,.20),transparent 70%);animation:ld-fade 1.2s var(--ease) both}
+.ld-in{position:relative;display:grid;justify-items:center;gap:clamp(14px,3.2vh,28px);width:min(420px,78vw)}
+.ld-plan{display:block;width:100%;height:auto;overflow:visible;transform-origin:center;transition:transform .8s var(--ease),opacity .6s var(--ease)}
+.ld-floor{fill:rgba(18,167,238,.05);animation:ld-fade .8s .2s var(--ease) both}
+.ld-wall,.ld-part{fill:none;stroke:var(--ice);stroke-width:.11;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:ld-draw 1.1s var(--ease) forwards}
+.ld-part{stroke-width:.09;animation-duration:.6s;animation-delay:.55s}
+.ld-dim path{fill:none;stroke:var(--muted);stroke-width:.07}
+.ld-dim text{fill:var(--muted);font:500 1px 'Geist Mono',ui-monospace,Menlo,monospace;letter-spacing:.02em}
+.ld-dim{animation:ld-fade .6s .8s var(--ease) both}
+.ld-fx{fill:rgba(40,189,218,.12);stroke:var(--aqua);stroke-width:.07;opacity:0;transform:scale(.6);transform-box:fill-box;transform-origin:center;transition:opacity .35s var(--ease),transform .35s var(--ease);transition-delay:calc(var(--i,0)*40ms)}
+#loader.s2 .ld-fx{opacity:1;transform:none}
+.ld-scan{opacity:0;fill:var(--ice)}
+#loader.s3 .ld-scan{animation:ld-scan .9s linear forwards}
+.ld-dot{fill:var(--ice);opacity:0;transform-box:fill-box;transform-origin:center}
+#loader.s3 .ld-dot{animation:ld-pop .4s var(--d,0s) var(--ease) forwards,ld-pulse 1.3s calc(var(--d,0s) + .4s) ease-in-out infinite}
+.ld-text{display:grid;justify-items:center;gap:14px;width:100%;transition:opacity .45s var(--ease)}
+.ld-logo{display:block;height:56px;width:auto;margin:-10px 0 -4px}
+.ld-status{justify-self:stretch;font:600 12px/1.4 'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--aqua);min-height:1.4em;text-align:center}
+.ld-row{display:flex;align-items:center;gap:14px;width:100%}
+.ld-bar{flex:1;height:2px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden}
+.ld-fill{display:block;height:100%;width:100%;transform:scaleX(var(--p,0));transform-origin:left;background:linear-gradient(90deg,#9BE7F5 0%,#28BDDA 45%,#12A7EE 100%)}
+.ld-pct{flex:none;min-width:4ch;text-align:right;font:500 12px/1 'Geist Mono',ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums;color:var(--muted);transition:opacity .3s}
+#loader.ready .ld-pct{opacity:0}
+/* exit: plan "becomes" the 3D store (canvas fades in underneath), then the overlay and grid dissolve */
+#loader.exit{pointer-events:none;background-color:transparent;transition:background-color .7s .1s var(--ease)}
+#loader.exit .ld-plan{transform:scale(1.08);opacity:0}
+#loader.exit .ld-text{opacity:0}
+#loader.exit .ld-glow{opacity:0;transition:opacity .6s .1s var(--ease)}
+#loader.exit .ld-grid{opacity:0;transition:opacity .5s .3s var(--ease);animation:none}
+/* shorter variants: other pages (ld-short) and repeat visits (ld-fast) */
+html.ld-short .ld-fx,html.ld-short .ld-dot,html.ld-short .ld-scan,html.ld-short .ld-dim,html.ld-short .ld-part,html.ld-fast .ld-fx,html.ld-fast .ld-dot,html.ld-fast .ld-scan,html.ld-fast .ld-dim,html.ld-fast .ld-part{display:none}
+html.ld-short .ld-wall{animation-duration:.6s}
+html.ld-fast .ld-wall,html.ld-fast .ld-floor,html.ld-fast .ld-grid,html.ld-fast .ld-glow{animation:none;stroke-dashoffset:0}
+@media (orientation:landscape) and (max-height:500px){
+  #loader .ld-in{width:min(92vw,720px);grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:center;gap:32px}
+  #loader .ld-plan{width:100%}
+  #loader .ld-text{justify-items:start}
+  #loader .ld-status{text-align:left}
+}
+@keyframes ld-draw{to{stroke-dashoffset:0}}
+@keyframes ld-fade{from{opacity:0}to{opacity:1}}
+@keyframes ld-scan{0%{opacity:1;transform:translateX(0)}92%{opacity:1}100%{opacity:0;transform:translateX(24.1px)}}
+@keyframes ld-pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
+@keyframes ld-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+@media (prefers-reduced-motion:reduce){
+  #loader *{animation:none!important}
+  .ld-wall,.ld-part{stroke-dashoffset:0}
+  .ld-fx{opacity:1;transform:none;transition:none}
+  .ld-dot{opacity:1}
+  .ld-dim,.ld-grid,.ld-glow,.ld-floor{opacity:1}
+  #stage{transition:opacity .3s}
+  #loader.exit{background-color:var(--bg);opacity:0;transition:opacity .3s linear}
+  #loader.exit .ld-plan,#loader.exit .ld-text,#loader.exit .ld-grid{transform:none;opacity:1;transition:none}
+}

@@ -13,8 +13,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
 
+<!--ld:start-->
+<style>
+<!-- @include layout/loader-critical.css -->
+</style>
+<script>
+<!-- @include layout/loader-boot.js -->
+</script>
+<noscript><style>#loader{display:none!important}html.is-loading{overflow:auto!important}</style></noscript>
+<!--ld:end-->
 </head>
 <body>
+<!-- @include layout/loader.html -->
+
 <canvas id="stage" aria-hidden="true"></canvas>
 <div class="shade"></div>
 

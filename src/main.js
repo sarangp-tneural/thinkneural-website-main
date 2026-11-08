@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import './style.css';
 import './faqbot.js';
+import { loader } from './loader.js';
 import { POSTS, FEATURED_POSTS } from './blog/posts.js';
 import { cardHTML, gridHTML, chipsHTML, articleHTML, relatedHTML } from './blog/render.js';
 
@@ -117,16 +118,19 @@ function route() {
   updateCta();
   if (startLoop) startLoop();
   document.querySelectorAll('#policiesView .policy').forEach(el => { el.hidden = page === 'policies' && el.id !== h; });
+  const scrollOk = !loader.active; // deep links scroll only AFTER the reveal (see loader.onDone below)
   if (isAbout) {
     const t = ((h !== 'events' && EVENT_IDS.includes(h)) || (h !== 'careers' && CAREER_IDS.includes(h)) || POLICY_IDS.includes(h)) ? document.getElementById(h) : null;
-    if (t) requestAnimationFrame(() => t.scrollIntoView({ block: 'start' }));
+    if (!scrollOk) { /* wait for the loader */ }
+    else if (t) requestAnimationFrame(() => t.scrollIntoView({ block: 'start' }));
     else if (page === 'blog') scrollTo({ top: 0, behavior: 'instant' });
     else if (prev !== page) scrollTo(0, 0);
   }
   else {
     if (typeof measure === 'function') measure();
     const t = h && h !== 'home' ? document.getElementById(h) : null;
-    if (t) requestAnimationFrame(() => t.scrollIntoView({ block: 'start' }));
+    if (!scrollOk) { /* wait for the loader */ }
+    else if (t) requestAnimationFrame(() => t.scrollIntoView({ block: 'start' }));
     else if (wasAbout || h === 'home') scrollTo(0, 0);
   }
 }
@@ -275,6 +279,22 @@ function stageFromScroll() {
 measure();
 addEventListener('load', measure);
 route();
+/* ---------- Loader tasks (real progress): fonts, above-the-fold images, 3D build, first frame ---------- */
+const hashTarget = (() => { const h = location.hash.slice(1); return h && h !== 'home' ? document.getElementById(h) : null; })();
+loader.track(
+  document.fonts
+    ? Promise.all(['600 12px "Plus Jakarta Sans"', '800 36px "Plus Jakarta Sans"', '500 12px "Geist Mono"'].map(f => document.fonts.load(f))).then(() => document.fonts.ready)
+    : Promise.resolve(),
+  { weight: 15, label: 'Reading site outline' });
+loader.track(Promise.all([...document.querySelectorAll('img')]
+  .filter(im => { const r = im.getClientRects()[0]; return r && r.bottom > 0 && r.top < innerHeight && r.width > 0; })
+  .map(im => (im.complete ? Promise.resolve() : new Promise(res => { im.addEventListener('load', res, { once: true }); im.addEventListener('error', res, { once: true }); setTimeout(res, 4000); }))
+    .then(() => im.decode && im.decode().catch(() => {})))), { weight: 15, label: 'Reading site outline' });
+/* after the reveal: measure the finished layout, then scroll to the deep-link target and focus it */
+loader.onDone(() => {
+  measure(); route();
+  if (hashTarget) { hashTarget.setAttribute('tabindex', '-1'); hashTarget.focus({ preventScroll: true }); }
+});
 document.querySelectorAll('details').forEach(d => d.addEventListener('toggle', measure));
 
 const railLinks = [...document.querySelectorAll('.rail a')];
@@ -395,6 +415,9 @@ if (!renderer) {
   return;
 }
 
+/* 3D tasks only matter on the home route; other pages reveal on fonts + images and let the scene load behind them */
+let sceneBuilt = null;
+if (page === 'home') loader.track(new Promise(res => { sceneBuilt = res; }), { weight: 40, label: 'Placing fixtures' });
 const BG = 0x02021A;
 renderer.setPixelRatio(Math.min(devicePixelRatio, isMobileView() ? 1.5 : 2));
 renderer.setClearColor(BG, 1);
@@ -604,6 +627,7 @@ ZONES.forEach(Z => {
 
 for (let i = 0; i < 900; i++) { simStep(0.1); if (i % 40 === 0) fadeHeat(); }
 colorize(); renderStats();
+if (sceneBuilt) sceneBuilt(); // geometry, materials and the warm-up simulation are built
 
 /* ---------- Camera path ---------- */
 const K = [
@@ -619,7 +643,7 @@ const K = [
 ];
 const camP = V(), camT = V(), tmpA = V(), tmpB = V();
 let distMul = 1;
-let lastW = 0, lastH = 0;
+let lastW = 0, lastH = 0, mobileLayout = false;
 function resize() {
   // the canvas is 100lvh tall, so its height does not change when the mobile address bar shows/hides
   const w = innerWidth, h = canvas.clientHeight || innerHeight;
@@ -631,6 +655,7 @@ function resize() {
   const mobile = w <= 900 && w < h; // portrait phones/tablets; landscape keeps the desktop framing (store on the right)
   camera.fov = camera.aspect < 1 ? Math.min(72, 40 / (camera.aspect * 1.05)) : 40;
   distMul = mobile ? 1.1 : 1;
+  mobileLayout = mobile;
   if (mobile) camera.setViewOffset(w, h, 0, h * 0.2, w, h);
   else camera.setViewOffset(w, h, -w * 0.19, 0, w, h);
   camera.updateProjectionMatrix();
@@ -646,6 +671,15 @@ if (!reduce) addEventListener('pointermove', e => { mx = e.clientX / innerWidth 
 /* ---------- Loop ---------- */
 const clock = new THREE.Clock();
 let sCur = stageFromScroll(), t0 = 0, frame = 0, statT = 0, lastHL = -2;
+/* Handoff from the loader: while it is up the scene is built and rendered behind it but its intro is held; when the exit
+   starts the camera dollies from a top-down view (matching the flat blueprint) into the hero view. Scroll cancels it. */
+let introHold = loader.active && page === 'home';
+let dolly = introHold && !reduce && !hashTarget && scrollY < 4 ? 0 : 1, dollyOn = false;
+loader.onDone(() => requestAnimationFrame(() => requestAnimationFrame(() => { sCur = stageFromScroll(); }))); // deep links: snap the camera to the target stage
+const DOLLY_S = 1.4, TOP = V(0.01, 62, 0.02);
+loader.onExit(() => { introHold = false; dollyOn = true; t0 = 0; });
+const stopDolly = () => { if (dolly < 1) dolly = 1; };
+['wheel', 'touchstart', 'keydown', 'scroll'].forEach(ev => addEventListener(ev, () => { if (dollyOn) stopDolly(); }, { passive: true }));
 function setHL(k, h) {
   if (CAT[k]) { CAT[k].mat.emissive.setRGB(0.04 * h, 0.22 * h, 0.3 * h); CAT[k].emat.color.copy(CAT[k].base).lerp(WHITE, h); }
   else if (k === 'partition') M.part.emissive.setRGB(0.04 * h, 0.22 * h, 0.3 * h);
@@ -653,7 +687,8 @@ function setHL(k, h) {
   else if (MM[k]) MM[k].color.copy(MBASE[k]).lerp(WHITE, 0.65 * h);
 }
 function tick() {
-  const dt = Math.min(clock.getDelta(), 0.05); t0 += dt; frame++;
+  const dt = Math.min(clock.getDelta(), 0.05); frame++;
+  if (introHold) t0 = 0; else t0 += dt;
   const sT = stageFromScroll();
   sCur = reduce ? sT : sCur + (sT - sCur) * Math.min(1, dt * 5);
   const s = sCur;
@@ -721,6 +756,14 @@ function tick() {
     camP.x = camT.x + dx * c - dz * sn; camP.z = camT.z + dx * sn + dz * c;
   }
   camP.sub(camT).multiplyScalar(distMul).add(camT);
+  if (dolly < 1) {
+    if (dollyOn) dolly = Math.min(1, dolly + dt / DOLLY_S);
+    const e = 1 - Math.pow(1 - dolly, 3);
+    camP.lerpVectors(tmpA.copy(TOP).add(camT), camP, e);
+    const w = innerWidth, h = lastH;
+    if (mobileLayout) camera.setViewOffset(w, h, 0, h * 0.2 * e, w, h); else camera.setViewOffset(w, h, -w * 0.19 * e, 0, w, h);
+    camera.updateProjectionMatrix();
+  }
   pmx += (mx - pmx) * 0.05; pmy += (my - pmy) * 0.05;
   camP.x += pmx * 1.4; camP.y += -pmy * 1.0;
   camera.position.copy(camP); camera.lookAt(camT);
@@ -740,4 +783,6 @@ function loop(ts) {
 startLoop = () => { if (!rafId && shouldRun()) { clock.getDelta(); rafId = requestAnimationFrame(loop); } };
 document.addEventListener('visibilitychange', startLoop);
 startLoop();
+/* first frame: render once, then wait two animation frames so it is actually on screen */
+if (page === 'home') loader.track(new Promise(res => { clock.getDelta(); tick(); requestAnimationFrame(() => requestAnimationFrame(res)); }), { weight: 30, label: 'Turning cameras into data' });
 })();

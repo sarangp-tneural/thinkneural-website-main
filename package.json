@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check:mobile": "node scripts/responsive-check.mjs after"
+    "check:mobile": "node scripts/responsive-check.mjs after",
+    "check:loader": "node scripts/loader-check.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^5.0.3",

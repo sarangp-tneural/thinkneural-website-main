@@ -51,6 +51,7 @@ function blogSeo() {
     const baseTitle = (tpl.match(/<title>([\s\S]*?)<\/title>/) || [])[1] || '';
     const baseDesc = (tpl.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
     return tpl
+      .replace(/<!--ld:start-->[\s\S]*?<!--ld:end-->\n?/g, '') // the static SEO pages never include the 3D loader
       .replace('<html lang="en">', `<html lang="en" data-base-title="${baseTitle}" data-base-desc="${baseDesc}">`)
       .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`)
       .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${esc(description)}">`)
