@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import './style.css';
+import './faqbot.js';
 import { POSTS, FEATURED_POSTS } from './blog/posts.js';
 import { cardHTML, gridHTML, chipsHTML, articleHTML, relatedHTML } from './blog/render.js';
 

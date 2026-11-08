@@ -1,0 +1,21 @@
+<button class="fq-launch" id="faqLauncher" type="button" aria-label="Ask a question" aria-expanded="false" aria-controls="faqPanel">
+  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.6-.8L3 21l1.9-5.2A8.4 8.4 0 1 1 21 11.5z"/></svg>
+</button>
+<div class="fq-panel" id="faqPanel" role="dialog" aria-label="FAQ Assistant" inert>
+  <header class="fq-head">
+    <span class="fq-avatar" aria-hidden="true"></span>
+    <div class="fq-title"><strong>FAQ Assistant</strong><small>Ask about SpaceZap, Sakshi &amp; DataDime</small></div>
+    <button class="fq-btn" id="faqMin" type="button" aria-label="Minimize FAQ Assistant">&minus;</button>
+    <button class="fq-btn" id="faqClose" type="button" aria-label="Close FAQ Assistant">&times;</button>
+  </header>
+  <div class="fq-body">
+    <div class="fq-loading" id="faqLoading" aria-live="polite"><span></span><span></span><span></span></div>
+    <iframe id="faqFrame" title="FAQ Assistant" allow="microphone" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <div class="fq-off" id="faqOff" hidden>
+      <h4>The assistant is unavailable right now</h4>
+      <p>Please try again in a little while, or reach us directly.</p>
+      <a class="btn btn-primary" href="#contact" data-faq-close>Request a demo</a>
+      <a class="fq-mail" href="mailto:info@tneuralai.com">info@tneuralai.com</a>
+    </div>
+  </div>
+</div>
