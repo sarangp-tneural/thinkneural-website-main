@@ -11,6 +11,7 @@
     "check:loader": "node scripts/loader-check.mjs"
   },
   "dependencies": {
+    "@emailjs/browser": "^5.0.3",
     "three": "^0.128.0"
   },
   "devDependencies": {

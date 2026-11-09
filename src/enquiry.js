@@ -1,9 +1,8 @@
-// Multi-step enterprise enquiry form (#demoForm). Posts to a Google Apps Script web app that
-// appends the Google Sheet row and emails sales. See docs/enquiry-apps-script.gs.
+// Multi-step enterprise enquiry form (#demoForm). Every answer is sent through EmailJS to the
+// mailbox set on the EmailJS template.
 import { trackLead } from './analytics.js';
 
-const ENDPOINT = import.meta.env.VITE_ENQUIRY_ENDPOINT;
-const TS_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+const EJS = { service: import.meta.env.VITE_EMAILJS_SERVICE_ID, template: import.meta.env.VITE_EMAILJS_TEMPLATE_ID, key: import.meta.env.VITE_EMAILJS_PUBLIC_KEY };
 const SALES = 'sales@tneuralai.com';
 const STEPS = ['About you', 'Your interest', 'Your requirements'];
 
@@ -14,7 +13,7 @@ function init() {
   const $ = id => document.getElementById(id);
   const steps = [...form.querySelectorAll('.fstep')];
   const err = $('formErr'), back = $('fBack'), next = $('fNext'), submit = $('fSubmit');
-  let cur = 0, lastBody = '', tsToken = '', tsId = null, sending = false;
+  let cur = 0, lastBody = '', sending = false;
   const submissionId = (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(16).slice(2));
 
   /* ---- first-touch attribution (UTMs survive navigation within the session) ---- */
@@ -42,7 +41,6 @@ function init() {
     $('fProg').style.width = ((n + 1) / steps.length * 100) + '%';
     $('fStepLabel').textContent = `Step ${n + 1} of ${steps.length} · ${STEPS[n]}`;
     err.textContent = '';
-    if (n === steps.length - 1) mountCaptcha();
   }
 
   /* ---- validation ---- */
@@ -64,7 +62,6 @@ function init() {
     }
     if (n === 2) {
       if (!$('fConsent').checked) return bad($('fConsent'), 'Please accept the privacy consent to continue.');
-      if (TS_KEY && !tsToken) { err.textContent = 'Please complete the spam check.'; return false; }
     }
     return true;
   }
@@ -82,29 +79,6 @@ function init() {
       if (!on) c.querySelectorAll('input,select').forEach(f => { if (f.type === 'radio' || f.type === 'checkbox') f.checked = false; else f.value = ''; });
     });
   }));
-
-  /* ---- Turnstile (loaded when the last step opens) ---- */
-  let tsLoading = null;
-  function mountCaptcha() {
-    if (!TS_KEY) { console.warn('VITE_TURNSTILE_SITE_KEY is not set: spam check disabled.'); return; }
-    if (tsId !== null) return;
-    tsLoading = tsLoading || new Promise((res, rej) => {
-      if (window.turnstile) return res();
-      const s = document.createElement('script');
-      s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-      s.async = true; s.onload = res; s.onerror = rej;
-      document.head.appendChild(s);
-    });
-    tsLoading.then(() => {
-      if (tsId !== null) return;
-      tsId = window.turnstile.render('#fCaptcha', {
-        sitekey: TS_KEY, theme: 'dark',
-        callback: t => { tsToken = t; },
-        'expired-callback': () => { tsToken = ''; },
-        'error-callback': () => { tsToken = ''; },
-      });
-    }).catch(() => { err.textContent = 'The spam check could not load. Please reload the page or email us.'; });
-  }
 
   /* ---- payload ---- */
   function collect() {
@@ -128,7 +102,6 @@ function init() {
       source_campaign: attribution.utm_campaign || attribution.utm_source || 'direct',
       ...Object.fromEntries(UTM.map(k => [k, attribution[k] || ''])),
       page_url: location.href.slice(0, 500), referrer: (document.referrer || '').slice(0, 500),
-      turnstile_token: tsToken,
     };
   }
   const bodyText = p => [
@@ -139,6 +112,20 @@ function init() {
     ['DataDime: data type', p.dd_data_type], ['DataDime: tools', p.dd_tools], ['DataDime: goal', p.dd_goal],
     ['Source campaign', p.source_campaign],
   ].filter(r => r[1]).map(r => `${r[0]}: ${r[1]}`).join('\n') + `\n\nRequirement:\n${p.requirement || '-'}`;
+
+  /* EmailJS template variables. The first six keep the names the original template used;
+     {{details}} is a ready-made list of only the questions this visitor answered. */
+  const params = p => ({
+    'full-name': p.name, 'work-email': p.email, phone: p.phone, company: p.company,
+    'company-size': p.locations, 'help-message': p.requirement || '-',
+    designation: p.designation, product: p.product, industry: p.industry, locations: p.locations, timeline: p.timeline,
+    sz_new_stores_per_year: p.sz_new_stores_per_year, sz_design_team: p.sz_design_team, sz_automate: p.sz_automate,
+    sk_cameras_per_location: p.sk_cameras_per_location, sk_existing_cctv: p.sk_existing_cctv, sk_monitor: p.sk_monitor, sk_deployment: p.sk_deployment,
+    dd_data_type: p.dd_data_type, dd_tools: p.dd_tools, dd_goal: p.dd_goal,
+    source_campaign: p.source_campaign, utm_source: p.utm_source, utm_medium: p.utm_medium, utm_campaign: p.utm_campaign, utm_term: p.utm_term, utm_content: p.utm_content,
+    gclid: p.gclid, fbclid: p.fbclid, submitted_at_ist: p.submitted_at_ist, page_url: p.page_url, referrer: p.referrer,
+    details: bodyText(p),
+  });
 
   const showFallback = (msg, p) => {
     lastBody = bodyText(p);
@@ -155,13 +142,12 @@ function init() {
     if ($('fWebsite').value) return;                   // honeypot
     $('formMsg').classList.remove('on');
     const p = collect();
-    if (!ENDPOINT) { showFallback('Online sending is not set up yet. Send it by email instead.', p); return; }
+    if (!EJS.service || !EJS.template || !EJS.key) { showFallback('Online sending is not set up yet. Send it by email instead.', p); return; }
     const label = submit.textContent;
     sending = true; submit.disabled = true; submit.textContent = 'Sending…'; form.setAttribute('aria-busy', 'true');
     try {
-      const res = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(p) });
-      const out = await res.json().catch(() => null);
-      if (!res.ok || !out || out.ok !== true) throw new Error((out && out.error) || 'HTTP ' + res.status);
+      const { default: emailjs } = await import('@emailjs/browser');
+      await emailjs.send(EJS.service, EJS.template, params(p), { publicKey: EJS.key });
       trackLead(p.product);
       form.querySelectorAll('.fstep,#fNav,#fSteps,.fnote,#formErr').forEach(el => { el.hidden = true; });
       form.reset();
@@ -172,7 +158,6 @@ function init() {
       err.textContent = 'Something went wrong, so your enquiry was not sent.';
       showFallback('You can send the same details by email instead.', p);
       sending = false; submit.disabled = false; submit.textContent = label;
-      if (window.turnstile && tsId !== null) { tsToken = ''; window.turnstile.reset(tsId); }
     } finally {
       form.removeAttribute('aria-busy');
     }
