@@ -69,7 +69,7 @@ Serve `dist/` as static files. Directory URLs like `/blog/<slug>/` must resolve 
 ## Notes
 
 - Policy pages: the Privacy Policy is final; the other four are placeholders until their text is decided.
-- Contact form sends through [EmailJS](https://www.emailjs.com) from the browser. Copy `.env.example` to `.env.local` and set `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY` (restart `npm run dev` after changing). The template variables are `full-name`, `work-email`, `company`, `phone`, `company-size`, `help-message`. If sending fails or the keys are missing, the form offers an "Open in email" fallback to `sales@tneuralai.com`.
+- Enquiry form (`#contact`, `src/enquiry.js`): a 3-step form that POSTs to a Google Apps Script web app (`docs/enquiry-apps-script.gs`), which appends a Google Sheet row and emails sales@tneuralai.com. Set `VITE_ENQUIRY_ENDPOINT` (Apps Script `/exec` URL) and `VITE_TURNSTILE_SITE_KEY` in `.env.local`; unset = mailto fallback. `VITE_GA_ID` / `VITE_META_PIXEL_ID` enable GA4 / Meta Pixel after the visitor accepts cookies (`src/analytics.js`). UTM parameters are captured into the sheet.
 - FAQ assistant: a floating chat widget (`src/components/layout/faqbot.html`, `src/faqbot.js`) that embeds the hosted FAQ bot in an iframe. Set `VITE_FAQBOT_URL` in `.env.local` to the bot's full URL; if unset or unreachable it shows a contact fallback. The host must allow framing that origin.
 
 

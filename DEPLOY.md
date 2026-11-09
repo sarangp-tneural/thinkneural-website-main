@@ -72,7 +72,7 @@ cd /var/www/thinkneural-website/src
 
 ```bash
 cp .env.example .env.local
-nano .env.local              # fill in the 3 VITE_EMAILJS_* values
+nano .env.local              # set VITE_ENQUIRY_ENDPOINT, VITE_TURNSTILE_SITE_KEY (+ optional VITE_GA_ID, VITE_META_PIXEL_ID); see docs/enquiry-apps-script.gs
 ```
 
 These are baked into the JavaScript at build time, so the file must exist **before** every build.

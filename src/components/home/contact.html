@@ -1,20 +1,116 @@
 <section class="solid" id="contact">
   <div class="panel">
-    <div class="kicker">Request a demo</div>
-    <h2>See it on your own floor plan.</h2>
-    <p>Tell us about your rollout or your camera network. We will run a live thirty-minute demo on a real space from your own network. No commitment. You will see what SpaceZap designs and what Sakshi surfaces before you decide anything.</p>
+    <div class="kicker">Request a consultation</div>
+    <h2>Let’s build something intelligent.</h2>
+    <p>Tell us about your business and the challenges you’re looking to solve. Our team will connect with you to explore the right AI solution for your organisation.</p>
     <form id="demoForm" novalidate>
-      <div class="field"><label for="fName">Full name</label><input id="fName" name="name" autocomplete="name" required></div>
-      <div class="field"><label for="fEmail">Work email</label><input id="fEmail" name="email" type="email" inputmode="email" autocomplete="email" required></div>
-      <div class="field"><label for="fCompany">Company</label><input id="fCompany" name="company" autocomplete="organization" required></div>
-      <div class="field"><label for="fPhone">Phone number</label><input id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel"></div>
-      <div class="field full"><label for="fSize">Company size</label>
-        <select id="fSize" name="size"><option value="">Select</option><option>1-50</option><option>51-200</option><option>201-1000</option><option>1000+</option></select></div>
-      <div class="field full"><label for="fNeed">What are you looking to solve?</label><textarea id="fNeed" name="need"></textarea></div>
+      <div class="fsteps full" id="fSteps" aria-label="Form progress">
+        <div class="fsteps-bar"><i id="fProg"></i></div>
+        <span id="fStepLabel" aria-live="polite">Step 1 of 3 · About you</span>
+      </div>
+      <p class="fnote full">All fields marked * are mandatory.</p>
+
+      <fieldset class="fstep full" data-step="1">
+        <legend class="sr">About you</legend>
+        <div class="field"><label for="fName">Full name *</label><input id="fName" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="fEmail">Business email *</label><input id="fEmail" name="email" type="email" inputmode="email" autocomplete="email" required></div>
+        <div class="field"><label for="fCc">Phone number *</label>
+          <div class="phone">
+            <select id="fCc" name="country_code" aria-label="Country code" autocomplete="tel-country-code">
+              <option value="+91" selected>🇮🇳 +91</option><option value="+971">🇦🇪 +971</option><option value="+966">🇸🇦 +966</option><option value="+974">🇶🇦 +974</option><option value="+968">🇴🇲 +968</option><option value="+965">🇰🇼 +965</option><option value="+973">🇧🇭 +973</option>
+              <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+65">🇸🇬 +65</option><option value="+60">🇲🇾 +60</option><option value="+61">🇦🇺 +61</option><option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option><option value="+94">🇱🇰 +94</option><option value="+880">🇧🇩 +880</option><option value="+977">🇳🇵 +977</option><option value="+27">🇿🇦 +27</option>
+            </select>
+            <input id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" aria-label="Phone number" required>
+          </div></div>
+        <div class="field"><label for="fCompany">Company name *</label><input id="fCompany" name="company" autocomplete="organization" required></div>
+        <div class="field full"><label for="fRole">Designation</label>
+          <select id="fRole" name="designation"><option value="">Select</option><option>Founder / CEO</option><option>COO / Operations Head</option><option>Retail Expansion Head</option><option>Retail Design / Architect</option><option>IT / Technology Head</option><option>Marketing Head</option><option>Other</option></select></div>
+      </fieldset>
+
+      <fieldset class="fstep full" data-step="2" hidden>
+        <legend class="sr">Your interest</legend>
+        <div class="field full"><span class="flabel" id="lblProduct">Product / solution interest *</span>
+          <div class="cards" role="radiogroup" aria-labelledby="lblProduct">
+            <label class="card-opt"><input type="radio" name="product" value="SpaceZap AI" data-key="spacezap"><b>SpaceZap AI</b><small>Retail design and expansion automation</small></label>
+            <label class="card-opt"><input type="radio" name="product" value="Sakshi AI" data-key="sakshi"><b>Sakshi AI</b><small>Video intelligence and store operations</small></label>
+            <label class="card-opt"><input type="radio" name="product" value="DataDime" data-key="datadime"><b>DataDime</b><small>Enterprise data intelligence</small></label>
+            <label class="card-opt"><input type="radio" name="product" value="Multiple Solutions" data-key=""><b>Multiple solutions</b><small>More than one product</small></label>
+            <label class="card-opt"><input type="radio" name="product" value="Custom AI Development" data-key=""><b>Custom AI development</b><small>Something built for you</small></label>
+          </div></div>
+
+        <div class="cond full" data-cond="spacezap" hidden>
+          <div class="field"><label for="qStores">New stores you plan to open annually</label><input id="qStores" name="sz_new_stores_per_year" inputmode="numeric"></div>
+          <div class="field"><label for="qDesign">Design team</label><select id="qDesign" name="sz_design_team"><option value="">Select</option><option>In-house design team</option><option>External design consultants</option><option>Both</option><option>Neither</option></select></div>
+          <div class="field full"><span class="flabel" id="lblSz">What are you looking to automate? Select all that apply</span>
+            <div class="opts" role="group" aria-labelledby="lblSz">
+              <label class="chip-opt"><input type="checkbox" name="sz_automate" value="Site Recce"><span>Site recce</span></label>
+              <label class="chip-opt"><input type="checkbox" name="sz_automate" value="Store Layout and Design"><span>Store layout and design</span></label>
+              <label class="chip-opt"><input type="checkbox" name="sz_automate" value="MEP Drawings"><span>MEP drawings</span></label>
+              <label class="chip-opt"><input type="checkbox" name="sz_automate" value="BOQ Generation"><span>BOQ generation</span></label>
+              <label class="chip-opt"><input type="checkbox" name="sz_automate" value="Complete Store Design Workflow"><span>Complete store design workflow</span></label>
+            </div></div>
+        </div>
+
+        <div class="cond full" data-cond="sakshi" hidden>
+          <div class="field"><label for="qCams">CCTV cameras per location (approx.)</label><input id="qCams" name="sk_cameras_per_location" inputmode="numeric"></div>
+          <div class="field"><label for="qCctv">Existing CCTV infrastructure?</label><select id="qCctv" name="sk_existing_cctv"><option value="">Select</option><option>Yes</option><option>No</option><option>Partly</option></select></div>
+          <div class="field full"><span class="flabel" id="lblSk">What would you like to monitor? Select all that apply</span>
+            <div class="opts" role="group" aria-labelledby="lblSk">
+              <label class="chip-opt"><input type="checkbox" name="sk_monitor" value="Footfall and Customer Analytics"><span>Footfall and customer analytics</span></label>
+              <label class="chip-opt"><input type="checkbox" name="sk_monitor" value="Customer Dwell Time"><span>Customer dwell time</span></label>
+              <label class="chip-opt"><input type="checkbox" name="sk_monitor" value="Heatmaps and Queue Monitoring"><span>Heatmaps and queue monitoring</span></label>
+              <label class="chip-opt"><input type="checkbox" name="sk_monitor" value="Employee Productivity"><span>Employee productivity</span></label>
+              <label class="chip-opt"><input type="checkbox" name="sk_monitor" value="SOP Compliance"><span>SOP compliance</span></label>
+            </div></div>
+          <div class="field full"><span class="flabel" id="lblDep">Preferred deployment</span>
+            <div class="opts" role="radiogroup" aria-labelledby="lblDep">
+              <label class="chip-opt"><input type="radio" name="sk_deployment" value="On-Premise"><span>On-premise</span></label>
+              <label class="chip-opt"><input type="radio" name="sk_deployment" value="Cloud"><span>Cloud</span></label>
+              <label class="chip-opt"><input type="radio" name="sk_deployment" value="Need Guidance"><span>Need guidance</span></label>
+            </div></div>
+        </div>
+
+        <div class="cond full" data-cond="datadime" hidden>
+          <div class="field"><label for="qData">Type of business data to analyse</label><input id="qData" name="dd_data_type"></div>
+          <div class="field"><label for="qTools">Tools or databases you use today</label><input id="qTools" name="dd_tools"></div>
+          <div class="field full"><span class="flabel" id="lblDd">What would you like to achieve? Select all that apply</span>
+            <div class="opts" role="group" aria-labelledby="lblDd">
+              <label class="chip-opt"><input type="checkbox" name="dd_goal" value="Business Intelligence"><span>Business intelligence</span></label>
+              <label class="chip-opt"><input type="checkbox" name="dd_goal" value="Automated Reporting"><span>Automated reporting</span></label>
+              <label class="chip-opt"><input type="checkbox" name="dd_goal" value="Conversational Data Analytics"><span>Conversational data analytics</span></label>
+              <label class="chip-opt"><input type="checkbox" name="dd_goal" value="Data Integration"><span>Data integration</span></label>
+            </div></div>
+        </div>
+
+        <div class="field"><label for="fIndustry">Industry</label>
+          <select id="fIndustry" name="industry"><option value="">Select</option><option>Retail</option><option>Restaurants / QSR</option><option>Banking / NBFC</option><option>Manufacturing</option><option>Warehousing / Logistics</option><option>Architecture / Design</option><option>Other</option></select></div>
+        <div class="field"><label for="fLocs">Number of stores / business locations</label>
+          <select id="fLocs" name="locations"><option value="">Select</option><option>1–10</option><option>11–50</option><option>51–200</option><option>201–500</option><option>500+</option><option>Not Applicable</option></select></div>
+      </fieldset>
+
+      <fieldset class="fstep full" data-step="3" hidden>
+        <legend class="sr">Your requirements</legend>
+        <div class="field full"><label for="fNeed">What business challenge are you looking to solve?</label>
+          <textarea id="fNeed" name="requirement" placeholder="Tell us briefly about your business requirements and how you would like AI to help your organisation."></textarea></div>
+        <div class="field full"><span class="flabel" id="lblTime">Implementation timeline</span>
+          <div class="opts" role="radiogroup" aria-labelledby="lblTime">
+            <label class="chip-opt"><input type="radio" name="timeline" value="Immediately"><span>Immediately</span></label>
+            <label class="chip-opt"><input type="radio" name="timeline" value="Within 1–3 Months"><span>Within 1–3 months</span></label>
+            <label class="chip-opt"><input type="radio" name="timeline" value="Within 3–6 Months"><span>Within 3–6 months</span></label>
+            <label class="chip-opt"><input type="radio" name="timeline" value="Just Exploring"><span>Just exploring</span></label>
+          </div></div>
+        <label class="consent full"><input type="checkbox" id="fConsent" name="consent" required><span>I agree to ThinkNeural.ai contacting me about this enquiry and to the processing of my details as described in the <a href="#privacy-policy">Privacy Policy</a>. *</span></label>
+        <div class="full" id="fCaptcha"></div>
+      </fieldset>
+
       <div class="formerr" id="formErr" role="alert"></div>
-      <div class="field full"><button class="btn btn-primary" type="submit" id="fSubmit">Request a demo</button></div>
+      <div class="fnav full" id="fNav">
+        <button class="btn btn-ghost" type="button" id="fBack" hidden>Back</button>
+        <button class="btn btn-primary" type="button" id="fNext">Next</button>
+        <button class="btn btn-primary" type="submit" id="fSubmit" hidden>REQUEST A CONSULTATION</button>
+      </div>
       <div class="field hp" aria-hidden="true"><label for="fWebsite">Leave this field empty</label><input id="fWebsite" name="website" tabindex="-1" autocomplete="off"></div>
-      <div class="formmsg" id="formOk" role="status" tabindex="-1"><strong>Request received.</strong> Someone from our team will reach out shortly.</div>
+      <div class="formmsg" id="formOk" role="status" tabindex="-1"><strong>Thank you for connecting with Thinkneural AI!</strong><br>We’ve received your enquiry. Our team will review your requirements and get in touch with you shortly.</div>
       <div class="formmsg" id="formMsg"><span id="formMsgText">We could not send this automatically. Send it by email instead.</span>
         <div class="ctas"><a class="btn btn-primary" id="mailLink" href="mailto:sales@tneuralai.com">Open in email</a><button class="btn btn-ghost" type="button" id="copyBtn">Copy details</button></div>
       </div>

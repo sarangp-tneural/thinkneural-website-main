@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import './style.css';
 import './faqbot.js';
+import './enquiry.js';
 import { loader } from './loader.js';
 import { POSTS, FEATURED_POSTS } from './blog/posts.js';
 import { cardHTML, gridHTML, chipsHTML, articleHTML, relatedHTML } from './blog/render.js';
@@ -167,49 +168,6 @@ addEventListener('keydown', e => {
   if (e.key === 'Escape') closeLb();
   else if (e.key === 'ArrowRight' && lbItems.length > 1) showLb(lbIdx + 1);
   else if (e.key === 'ArrowLeft' && lbItems.length > 1) showLb(lbIdx - 1);
-});
-
-/* ---------- Demo form ---------- */
-const form = document.getElementById('demoForm');
-let lastBody = '';
-const submitBtn = document.getElementById('fSubmit');
-const EJS = { service: import.meta.env.VITE_EMAILJS_SERVICE_ID, template: import.meta.env.VITE_EMAILJS_TEMPLATE_ID, key: import.meta.env.VITE_EMAILJS_PUBLIC_KEY };
-form.addEventListener('submit', async e => {
-  e.preventDefault();
-  if (submitBtn.disabled) return;
-  const d = Object.fromEntries(new FormData(form));
-  const err = document.getElementById('formErr');
-  const fail = (m) => { err.textContent = m; };
-  document.getElementById('formMsg').classList.remove('on');
-  if (!d.name || !d.company || !/^\S+@\S+\.\S+$/.test(d.email || '')) { fail('Please add your name, company and a valid work email.'); return; }
-  err.textContent = '';
-  if (d.website) return; // honeypot: bots fill hidden fields
-  lastBody = `Name: ${d.name}\nWork email: ${d.email}\nCompany: ${d.company}\nPhone: ${d.phone || '-'}\nCompany size: ${d.size || '-'}\n\nWhat we want to solve:\n${d.need || '-'}`;
-  document.getElementById('mailLink').href = 'mailto:sales@tneuralai.com?subject=' + encodeURIComponent('Demo request: ' + d.company) + '&body=' + encodeURIComponent(lastBody);
-  const showFallback = (msg) => { document.getElementById('formMsgText').textContent = msg; document.getElementById('formMsg').classList.add('on'); };
-  if (!EJS.service || !EJS.template || !EJS.key) { showFallback('Online sending is not set up yet. Send it by email instead.'); return; }
-  const label = submitBtn.textContent;
-  submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; form.setAttribute('aria-busy', 'true');
-  try {
-    const { default: emailjs } = await import('@emailjs/browser');
-    // field names match the EmailJS template used on the main site
-    await emailjs.send(EJS.service, EJS.template, {
-      'full-name': d.name, 'work-email': d.email, company: d.company, phone: d.phone || '', 'company-size': d.size || '', 'help-message': d.need || '',
-    }, { publicKey: EJS.key });
-    form.reset();
-    submitBtn.closest('.field').hidden = true;
-    const ok = document.getElementById('formOk'); ok.classList.add('on'); ok.focus();
-  } catch (x) {
-    console.error('EmailJS error:', x);
-    fail('Something went wrong, so your request was not sent.');
-    showFallback('You can send the same details by email instead.');
-  } finally {
-    submitBtn.disabled = false; submitBtn.textContent = label; form.removeAttribute('aria-busy');
-  }
-});
-document.getElementById('copyBtn').addEventListener('click', async e => {
-  try { await navigator.clipboard.writeText('To: sales@tneuralai.com\n\n' + lastBody); e.target.textContent = 'Copied'; }
-  catch (x) { e.target.textContent = 'Copy blocked. Select and copy manually'; }
 });
 
 /* ---------- Store data, in metres ---------- */
