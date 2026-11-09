@@ -4,9 +4,13 @@
     <h2>Let’s build something intelligent.</h2>
     <p>Tell us about your business and the challenges you’re looking to solve. Our team will connect with you to explore the right AI solution for your organisation.</p>
     <form id="demoForm" novalidate>
-      <div class="fsteps full" id="fSteps" aria-label="Form progress">
-        <div class="fsteps-bar"><i id="fProg"></i></div>
-        <span id="fStepLabel" aria-live="polite">Step 1 of 3 · About you</span>
+      <div class="fsteps full" id="fSteps">
+        <ol class="stepper" aria-label="Form progress">
+          <li data-i="0"><span class="dot" aria-hidden="true">1</span><span class="slab">About you</span></li>
+          <li data-i="1"><span class="dot" aria-hidden="true">2</span><span class="slab">Choose product</span></li>
+          <li data-i="2"><span class="dot" aria-hidden="true">3</span><span class="slab">Submit</span></li>
+        </ol>
+        <span class="sr" id="fStepLabel" aria-live="polite">Step 1 of 3: About you</span>
       </div>
       <p class="fnote full">All fields marked * are mandatory.</p>
 

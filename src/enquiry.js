@@ -4,7 +4,7 @@ import { trackLead } from './analytics.js';
 
 const EJS = { service: import.meta.env.VITE_EMAILJS_SERVICE_ID, template: import.meta.env.VITE_EMAILJS_TEMPLATE_ID, key: import.meta.env.VITE_EMAILJS_PUBLIC_KEY };
 const SALES = 'sales@tneuralai.com';
-const STEPS = ['About you', 'Your interest', 'Your requirements'];
+const STEPS = ['About you', 'Choose product', 'Submit'];
 
 const form = document.getElementById('demoForm');
 if (form) init();
@@ -38,8 +38,12 @@ function init() {
     back.hidden = n === 0;
     next.hidden = n === steps.length - 1;
     submit.hidden = n !== steps.length - 1;
-    $('fProg').style.width = ((n + 1) / steps.length * 100) + '%';
-    $('fStepLabel').textContent = `Step ${n + 1} of ${steps.length} · ${STEPS[n]}`;
+    form.querySelectorAll('.stepper li').forEach((li, i) => {
+      li.classList.toggle('done', i < n);
+      li.classList.toggle('now', i === n);
+      if (i === n) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+    });
+    $('fStepLabel').textContent = `Step ${n + 1} of ${steps.length}: ${STEPS[n]}`;
     err.textContent = '';
   }
 
